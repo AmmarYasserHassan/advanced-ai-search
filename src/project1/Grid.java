@@ -9,8 +9,7 @@ public class Grid {
 	Cell[][] theGrid;
 	int length;
 	int width;
-	String[] possibleElements = { "Empty", "Pad", "Rock", "Immovable" };
-	String[] mainElements = { "R2-D2", "Teleportal" };
+	String[] possibleElements = { "Empty", "Immovable"};
 
 	public Grid(int min, int max) {
 		// this.length = min + (int)(Math.random() * max);
@@ -23,36 +22,66 @@ public class Grid {
 	public void initializeGrid() {
 
 		boolean teleportalAdded = false;
-		boolean R2D2Added = false;
 
-		// loops for adding the main elements (Teleportal, R2-D2)
-		while (!teleportalAdded && !R2D2Added) {
-			for (int i = 0; i < mainElements.length; i++) {
-				int newI = (int) (Math.random() * this.length);
-				int newJ = (int) (Math.random() * this.width);
-
-				String mainElement = this.mainElements[i];
+		
+		
+		int newI = (int) (Math.random() * this.length);
+		int newJ = (int) (Math.random() * this.width);
+		this.theGrid[newI][newJ] = new Cell();
+		this.theGrid[newI][newJ].addElement("R2-D2");
+		
+		// loop for adding the main elements (Teleportal, R2-D2)
+		while (!teleportalAdded) {
+				 newI = (int) (Math.random() * this.length);
+				 newJ = (int) (Math.random() * this.width);
+				String mainElement = "Teleportal";
 				if (this.theGrid[newI][newJ] == null) {
-
-					if (mainElement.equals("Teleportal"))
 						teleportalAdded = true;
-
-					if (mainElement.equals("R2-D2"))
-						R2D2Added = true;
-
 					this.theGrid[newI][newJ] = new Cell();
 					this.theGrid[newI][newJ].addElement(mainElement);
 				}
-			}
 		}
 
-		// loops for adding (Empty, Pad, Rock, Immovable)
+		
+		int maxPadsRocks = (int) ((this.length*this.width-2)/2)-1;
+		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
+		int numberOfRocksToBeAdded = numberOfPadsToBeAdded;
+ 
+		
+		System.out.println(numberOfPadsToBeAdded);
+		
+	    while(numberOfPadsToBeAdded >0)
+	    {
+			 newI = (int) (Math.random() * this.length);
+			 newJ = (int) (Math.random() * this.width);
+			 if (this.theGrid[newI][newJ] == null) {
+				this.theGrid[newI][newJ] = new Cell();
+				this.theGrid[newI][newJ].addElement("Pads");
+				numberOfPadsToBeAdded--;
+			}	 
+	    	
+	    }
+		
+	    
+	    while(numberOfRocksToBeAdded >0)
+	    {
+			 newI = (int) (Math.random() * this.length);
+			 newJ = (int) (Math.random() * this.width);
+			 if (this.theGrid[newI][newJ] == null) {
+				this.theGrid[newI][newJ] = new Cell();
+				this.theGrid[newI][newJ].addElement("Rocks");
+				numberOfRocksToBeAdded--;
+			}	 
+	    	
+	    }
+	    
+	    
+	 // loops for adding (Empty,Immovable)
 		for (int i = 0; i < this.length; i++) {
 			for (int j = 0; j < this.width; j++) {
-				System.out.println(this.theGrid[i][j]);
 				if (this.theGrid[i][j] == null) {
 					this.theGrid[i][j] = new Cell();
-					int index = (int) (Math.random() * 4);
+					int index = (int) (Math.random() * 2);
 
 					String element = this.possibleElements[index];
 					this.theGrid[i][j].addElement(element);
@@ -75,7 +104,7 @@ public class Grid {
 	}
 
 	public static void main(String[] args) {
-		Grid g = new Grid(3, 3);
+		Grid g = new Grid(5, 5);
 
 		g.initializeGrid();
 		g.showGrid();
