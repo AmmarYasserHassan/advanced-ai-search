@@ -20,10 +20,12 @@ public class StatesQueue
 		
 		switch(order)
 		{
-		case "BFS" : this.states.add(n); break;
-		case "DFS" : this.states.add(0,n); break;
-		case "IDS" : this.states.add(0,n); break;
-		case "UCS" : this.states.add(n);
+		case "BF" : this.states.add(n); break;
+		case "DF" : this.states.add(0,n); break;
+		case "ID" : this.states.add(0,n); break;
+		case "GR":
+		case "AS" :
+		case "UC" : this.states.add(n);
 		
 		Collections.sort(this.states, new Comparator<Node>() {
 	        public int compare(Node n1, Node n2)
@@ -38,7 +40,9 @@ public class StatesQueue
 	            return 1;
 	        }
 	    });
+		break;
 		}
+		
 			
 	}
 	

@@ -6,19 +6,15 @@ public class Cell
 {
 	
 	ArrayList<String> elements;
-	boolean containsTeleportal;
+	int i;
+	int j;
 	
+	//TODO type and element that may be null
 	
-	
-	public Cell(ArrayList<String> elements) {
-		this.elements = elements;
-		this.containsTeleportal = false;
-	}
-
-
-	public Cell() {
+	public Cell(int i, int j) {
 		this.elements = new ArrayList<String>();
-		this.containsTeleportal = false;
+		this.i =i;
+		this.j=j;
 	}
 	
 	
@@ -27,11 +23,21 @@ public class Cell
 		this.elements.add(elm);
 	}
 	
+	
 	public void removeElement(String elm)
 	{
 		this.elements.remove(elm);
 	}
 
+	
+	public Cell clone()
+	{
+		Cell newCell = new Cell(this.i,this.j);
+		for (int i = 0; i < this.elements.size(); i++) {
+			newCell.addElement(this.elements.get(i));
+		}
+		return newCell;
+	}
 
 	@Override
 	public String toString() {
