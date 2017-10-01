@@ -9,7 +9,7 @@ public class Grid {
 	Cell[][] theGrid;
 	int length;
 	int width;
-	String[] possibleElements = { "Empty", "Immovable"};
+	String[] possibleElements = {"Empty", "Immovable"};
 
 	public Grid(int min, int max) {
 		// this.length = min + (int)(Math.random() * max);
@@ -46,10 +46,7 @@ public class Grid {
 		int maxPadsRocks = (int) ((this.length*this.width-2)/2)-1;
 		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
 		int numberOfRocksToBeAdded = numberOfPadsToBeAdded;
- 
-		
-		System.out.println(numberOfPadsToBeAdded);
-		
+ 		
 	    while(numberOfPadsToBeAdded >0)
 	    {
 			 newI = (int) (Math.random() * this.length);
@@ -104,7 +101,7 @@ public class Grid {
 	}
 
 	public static void main(String[] args) {
-		Grid g = new Grid(5, 5);
+		Grid g = new Grid(3, 3);
 
 		g.initializeGrid();
 		g.showGrid();
