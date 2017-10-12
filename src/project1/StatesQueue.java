@@ -13,13 +13,21 @@ public class StatesQueue
 	{
 		this.states = new ArrayList<Node>();
 	}
-
+ 
+	public void enque(ArrayList<Node> nodes, String order)
+	{
+		for(Node node:nodes)
+		{
+			this.enque(node, order);
+		}
+	}
 	
 	public void enque(Node n, String order)
 	{
 		
 		switch(order)
 		{
+		case "Initial State": this.states.add(n); break;
 		case "BF" : this.states.add(n); break;
 		case "DF" : this.states.add(0,n); break;
 		case "ID" : this.states.add(0,n); break;
@@ -78,31 +86,6 @@ public class StatesQueue
 		return "StatesQueue [" + states + "]";
 	}
 	
-	
-	
-	public static void main(String [] args)
-	{
-		Node n1 = new Node();
-		n1.costToReachThisNode = 1;
-		
-		Node n2 = new Node();
-		n2.costToReachThisNode = 5;
-		Node n3 = new Node();
-		n3.costToReachThisNode = 3;
-		Node n4 = new Node();
-		
-		n4.costToReachThisNode = -3;
-		
-		
-		StatesQueue s = new StatesQueue();
-		
-		s.enque(n1, "UCS");
-		s.enque(n2, "UCS");
-		s.enque(n3, "UCS");
-		s.enque(n4, "UCS");
-		
-		s.show();
-	}
-	
+
 	
 }

@@ -9,7 +9,7 @@ public class Grid {
 	int numberOfPads;
 	Cell r2d2;
 	String r2d2Orientation;
-	String [] locations = {"North","East","South","West"};
+	static String [] locations = {"North","East","South","West"};
 
 	public Grid(int min, int max) {
 		this.length = min;
@@ -30,7 +30,7 @@ public class Grid {
 		this.r2d2 = this.grid[newI][newJ];
 	
 		
-		this.r2d2Orientation = this.locations[(int) (Math.random() *4)];
+		this.r2d2Orientation = locations[(int) (Math.random() *4)];
 		
 		// loop for adding the main elements (Teleportal, R2-D2)
 		while (!teleportalAdded) {
@@ -213,7 +213,8 @@ public class Grid {
 		if(facingAnEdge(i, j, orientation))
 		{
 			System.err.println("Ahmed Wageeh says: trying to get next cell while facing edge");
-			return null;
+			//Return same cell cause forward should make you stuck there
+			return this.grid[i][j];
 		}
 		switch(orientation)
 		{
@@ -269,5 +270,7 @@ public class Grid {
 		System.out.println(g.r2d2Orientation);
 
 	}
+	
+	
 
 }
