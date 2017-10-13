@@ -6,8 +6,8 @@ import java.util.Collections;
 public class Searcher {
 
 	static StatesQueue queue = new StatesQueue(); 
-	static String [] operators = {"F","RR","RL"}; 
-	//static String [] operators = {"F","RR"}; 
+	static String [] operators = {"RR","RL","F"}; 
+	static ArrayList<Node> previousStates = new ArrayList<Node>();
 	static int numberOfNodesExlored=0;
 	
 	public static Node initialize(int maxWidth, int maxHeight)
@@ -33,28 +33,36 @@ public class Searcher {
 		
 		int iterations = 0;
 		
-		while(iterations<600000)
-		{
-//		while(!queue.isEmpty())
+//		while(iterations<6)
 //		{
+		while(!queue.isEmpty())
+		{
 		
 //		while(numberOfNodesExlored<600000)
 //		{
 			Node currentNode = queue.deque();
 			
-
-
-			
-			if(R2D2Became2(currentNode))
-			{
-				System.out.println("iterations = " + iterations);
-				return currentNode;
-			}
+//			System.out.println();
+//			System.out.println("-----------------------------------------------------" );
+//			System.out.println();
+//			currentNode.grid.showGrid();
+//			System.out.println(currentNode.grid.r2d2Orientation);
+//		//	System.out.println(" Parent " + currentNode.Parent.grid.r2d2.i +" ,"+ currentNode.Parent.grid.r2d2.j);
+//			System.out.println();
+//			System.out.println("-----------------------------------------------------" );
+//			System.out.println();
+//
+//			
+//			if(R2D2Became2(currentNode))
+//			{
+//				System.out.println("iterations = " + iterations);
+//				return currentNode;
+//			}
 				
 			 
 			if(isGoal(currentNode))
 			{
-				System.out.println("REACHED A SOLUTION!");
+				System.out.println("REACHED A SOLUTION! in " + iterations);
 				return currentNode;
 			}
 			ArrayList<Node> childern = expand(currentNode);
@@ -63,6 +71,8 @@ public class Searcher {
 			queue.enque(childern, strategy);
 			
 			iterations++;
+			if(iterations%1000==0)
+			System.out.println(iterations);
 		}
 		
 		System.out.println("Reached end of the queue without finding a goal state, termintaed after " + iterations + " interation");
@@ -129,16 +139,21 @@ public class Searcher {
 		for(String operator: operators)
 		{  
 			newChild = operate(n,operator);
-			if(!(newChild == null))
+			if(newChild != null)
 			{
+				//if(operator.equals("F"))
+			//	{
 //				System.out.println();
 //				System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
 //				System.out.println();
 //				newChild.grid.showGrid();
+//				System.out.println(operator);
+//				System.out.println("Parent " + newChild.Parent.grid.r2d2.i +" ,"+ newChild.Parent.grid.r2d2.j);
 //				System.out.println(newChild.grid.r2d2Orientation);
 //				System.out.println();
 //				System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 //				System.out.println();
+				//}
 			 childern.add(newChild);
 			 
 			}
@@ -171,20 +186,20 @@ public class Searcher {
 		if(operation.equals("F"))
 		{
 			if(parentNode.grid.facingAnEdge(parentNode.grid.r2d2.i, parentNode.grid.r2d2.j, parentNode.grid.r2d2Orientation)){
-				System.out.println("facing an edge " + parentNode.grid.r2d2Orientation);
+//				System.out.println("facing an edge " + parentNode.grid.r2d2Orientation);
 				return null;
 				}
 			if(parentNode.grid.facingAnObstacle(parentNode.grid.r2d2.i, parentNode.grid.r2d2.j, parentNode.grid.r2d2Orientation)){
-				System.out.println("facing an obstacle");
+//				System.out.println("facing an obstacle");
 				return null;
 				}
 			if(parentNode.grid.facingARock(parentNode.grid.r2d2.i, parentNode.grid.r2d2.j, parentNode.grid.r2d2Orientation))
 			{
-				System.out.println("facing a rock");
+//				System.out.println("facing a rock");
 				Cell nextCell = parentNode.grid.getNextCell(parentNode.grid.r2d2.i, parentNode.grid.r2d2.j, parentNode.grid.r2d2Orientation);
 				if(parentNode.grid.rockCanMove(nextCell.i, nextCell.j, parentNode.grid.r2d2Orientation))
 				{     
-					System.out.println("rock can move");
+//					System.out.println("rock can move");
 					   int costToReachThisNode = ++parentNode.costToReachThisNode;
 					   Node childNode = new Node(parentNode.grid.clone(),costToReachThisNode,parentNode,operation);
 					   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
@@ -194,12 +209,13 @@ public class Searcher {
 				}
 				else
 				{
-					System.out.println("rock cant move");
+//					System.out.println("rock cant move");
 					return null;
 				}
 						
 			}
-			System.out.println("facing nothing " + parentNode.grid.r2d2Orientation);
+//			System.out.println("facing nothing " + parentNode.grid.r2d2Orientation);
+			
 			   int costToReachThisNode = ++parentNode.costToReachThisNode;
 			   Node childNode = new Node(parentNode.grid.clone(),costToReachThisNode,parentNode,operation);
 			   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
@@ -247,6 +263,114 @@ public class Searcher {
         return grid;
 	}
 	
+	public static Grid testingGrid6()
+	{
+        Cell [][] g = new Cell[3][3];
+        g[0][0] = new Cell(0,0,"Pad");
+        g[0][1] = new Cell(0,1);
+        g[0][2] = new Cell(0,2);
+        
+        g[1][0] = new Cell(1,0,"Rock");
+        g[1][1] = new Cell(1,1);
+        g[1][2] = new Cell(1,2,"R2D2");
+        
+        g[2][0] = new Cell(2,0,"Teleportal");
+        g[2][1] = new Cell(2,1);
+        g[2][2] = new Cell(2,2);
+         
+       
+        
+       Grid grid = new Grid(3,3);
+       grid.grid=g;
+       grid.r2d2Orientation = "South";
+       grid.r2d2 = g[1][2];
+       grid.numberOfPads = 1;
+       
+        
+        return grid;
+	}
+	
+	public static Grid testingGrid3()
+	{
+        Cell [][] g = new Cell[3][3];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1,"R2D2");
+        g[0][2] = new Cell(0,2);
+        
+        g[1][0] = new Cell(1,0,"Pad");
+        g[1][1] = new Cell(1,1,"Rock");
+        g[1][2] = new Cell(1,2);
+        
+        g[2][0] = new Cell(2,0);
+        g[2][1] = new Cell(2,1,"Teleportal");
+        g[2][2] = new Cell(2,2);
+         
+       
+        
+       Grid grid = new Grid(3,3);
+       grid.grid=g;
+       grid.r2d2Orientation = "East";
+       grid.r2d2 = g[0][1];
+       grid.numberOfPads = 1;
+       
+        
+        return grid;
+	}
+	
+	public static Grid testingGrid4()
+	{
+        Cell [][] g = new Cell[3][3];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1);
+        g[0][2] = new Cell(0,2);
+        
+        g[1][0] = new Cell(1,0,"R2D2");
+        g[1][1] = new Cell(1,1,"Rock");
+        g[1][2] = new Cell(1,2,"Teleportal");
+        
+        g[2][0] = new Cell(2,0);
+        g[2][1] = new Cell(2,1,"Pad");
+        g[2][2] = new Cell(2,2);
+         
+       
+        
+       Grid grid = new Grid(3,3);
+       grid.grid=g;
+       grid.r2d2Orientation = "East";
+       grid.r2d2 = g[1][0];
+       grid.numberOfPads = 1;
+       
+        
+        return grid;
+	}
+	
+	public static Grid testingGrid5()
+	{
+        Cell [][] g = new Cell[3][3];
+        g[0][0] = new Cell(0,0,"Pad");
+        g[0][1] = new Cell(0,1,"R2D2");
+        g[0][2] = new Cell(0,2);
+        
+        g[1][0] = new Cell(1,0);
+        g[1][1] = new Cell(1,1,"Rock");
+        g[1][2] = new Cell(1,2);
+        
+        g[2][0] = new Cell(2,0,"Teleportal");
+        g[2][1] = new Cell(2,1);
+        g[2][2] = new Cell(2,2);
+         
+       
+        
+       Grid grid = new Grid(3,3);
+       grid.grid=g;
+       grid.r2d2Orientation = "West";
+       grid.r2d2 = g[0][1];
+       grid.numberOfPads = 1;
+       
+        
+        return grid;
+	}
+	
 	public static Grid testingGrid2()
 	{
         Cell [][] g = new Cell[4][4];
@@ -285,10 +409,12 @@ public class Searcher {
 	public static void main(String [] args)
 	{
 		
-		Node init = initialize(4,4);
-//		init.grid = testingGrid();
-		init.grid = testingGrid2();
-	//	init.grid.showGrid();
+		Node init = initialize(3,3);
+		//init.grid = testingGrid6();
+		
+		//init.grid = testingGrid3();
+//		init.grid = testingGrid2();
+		init.grid.showGrid();
 //		System.out.println(init.grid.numberOfPads);
 //		System.out.println(init.grid.r2d2Orientation);
 //		System.out.println(init.grid.r2d2);
