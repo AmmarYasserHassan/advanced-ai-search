@@ -17,15 +17,22 @@ public class Cell
 		this.j=j;
 	}
 	
+	public Cell(int i, int j,String elm) {
+		this.elements = new ArrayList<String>();
+		this.i =i;
+		this.j=j;
+		this.elements.add(elm);
+	}
+	
 	
 	public void addElement(String elm)
-	{
+	{  
 		this.elements.add(elm);
 	}
 	
 	
 	public void removeElement(String elm)
-	{
+	{ 
 		this.elements.remove(elm);
 	}
 
@@ -33,8 +40,8 @@ public class Cell
 	public Cell clone()
 	{
 		Cell newCell = new Cell(this.i,this.j);
-		for (int i = 0; i < this.elements.size(); i++) {
-			newCell.addElement(this.elements.get(i));
+		for (int k = 0; k < this.elements.size(); k++) {
+			newCell.addElement(this.elements.get(k));
 		}
 		return newCell;
 	}

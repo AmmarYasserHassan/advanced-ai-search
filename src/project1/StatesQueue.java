@@ -24,13 +24,13 @@ public class StatesQueue
 	
 	public void enque(Node n, String order)
 	{
-		
+
 		switch(order)
 		{
 		case "Initial State": this.states.add(n); break;
-		case "BF" : this.states.add(n); break;
-		case "DF" : this.states.add(0,n); break;
-		case "ID" : this.states.add(0,n); break;
+		case "BFS" : this.states.add(n); break;
+		case "DFS" : this.states.add(0,n); break;
+		case "IDS" : this.states.add(0,n); break;
 		case "GR":
 		case "AS" :
 		case "UC" : this.states.add(n);

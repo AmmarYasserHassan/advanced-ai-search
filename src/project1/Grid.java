@@ -9,14 +9,17 @@ public class Grid {
 	int numberOfPads;
 	Cell r2d2;
 	String r2d2Orientation;
+	boolean atTeleportalCell;
+	int numberOfPadsRemaningWithoutRocks;
 	static String [] locations = {"North","East","South","West"};
 
 	public Grid(int min, int max) {
 		this.length = min;
 		this.width = max;
 		this.grid = new Cell[this.length][this.width];
+		this.atTeleportalCell = false;
+		this.initializeGrid();
 	}
-
 	
 	public void initializeGrid() {
 
@@ -25,6 +28,7 @@ public class Grid {
 		int newI = (int) (Math.random() * this.length);
 		int newJ = (int) (Math.random() * this.width);
 		this.grid[newI][newJ] = new Cell(newI,newJ);
+		// Added R2D2
 		this.grid[newI][newJ].addElement("R2D2");
 		
 		this.r2d2 = this.grid[newI][newJ];
@@ -32,7 +36,7 @@ public class Grid {
 		
 		this.r2d2Orientation = locations[(int) (Math.random() *4)];
 		
-		// loop for adding the main elements (Teleportal, R2-D2)
+		// loop for adding Teleportal
 		while (!teleportalAdded) {
 				 newI = (int) (Math.random() * this.length);
 				 newJ = (int) (Math.random() * this.width);
@@ -48,9 +52,11 @@ public class Grid {
 
 		
 		int maxPadsRocks = (int) ((this.length*this.width-2)/2)-1;
-		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
+//		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
+		int numberOfPadsToBeAdded = 1;
 		int numberOfRocksToBeAdded = numberOfPadsToBeAdded;
 		this.numberOfPads = numberOfRocksToBeAdded;
+		this.numberOfPadsRemaningWithoutRocks = numberOfPads;
  		
 	    while(numberOfPadsToBeAdded >0)
 	    {
@@ -58,7 +64,7 @@ public class Grid {
 			 newJ = (int) (Math.random() * this.width);
 			 if (this.grid[newI][newJ] == null) {
 				this.grid[newI][newJ] = new Cell(newI,newJ);
-				this.grid[newI][newJ].addElement("Pads");
+				this.grid[newI][newJ].addElement("Pad");
 				numberOfPadsToBeAdded--;
 			}	 
 	    	
@@ -71,22 +77,26 @@ public class Grid {
 			 newJ = (int) (Math.random() * this.width);
 			 if (this.grid[newI][newJ] == null) {
 				this.grid[newI][newJ] =new Cell(newI,newJ);
-				this.grid[newI][newJ].addElement("Rocks");
+				this.grid[newI][newJ].addElement("Rock");
 				numberOfRocksToBeAdded--;
 			}	 
 	    	
 	    }
-	    String[] possibleElements = {"Empty", "Immovable"};
+	  
 	    
-	 // loops for adding (Empty,Immovable)
+	 // loops for adding Immovable
+	   
+	    
 		for (int i = 0; i < this.length; i++) {
 			for (int j = 0; j < this.width; j++) {
 				if (this.grid[i][j] == null) {
 					this.grid[i][j] = new Cell(newI,newJ);
-					int index = (int) (Math.random() * 2);
-  
-					String element = possibleElements[index];
+					int index = (int) (Math.random() * 15);
+					if(index==1)
+					{
+					String element = "Immovable";
 					this.grid[i][j].addElement(element);
+					}
 				}
 
 			}
@@ -96,10 +106,8 @@ public class Grid {
 	public void showGrid() {
 		for (int i = 0; i < this.length; i++) {
 			for (int j = 0; j < this.width; j++) {
-
 				System.out.print(this.grid[i][j].toString() + " | ");
-			}
-
+			}			
 			System.out.println();
 			System.out.println();
 		}
@@ -155,6 +163,8 @@ public class Grid {
 		newGrid.numberOfPads = this.numberOfPads;
 		newGrid.r2d2 = this.r2d2.clone();
 		newGrid.r2d2Orientation = this.r2d2Orientation;
+		newGrid.atTeleportalCell = this.atTeleportalCell;
+		newGrid.numberOfPadsRemaningWithoutRocks = this.numberOfPadsRemaningWithoutRocks;
 		return newGrid;
 		
 	}
@@ -170,12 +180,12 @@ public class Grid {
 			break;
 			
 		case "East": 
-			if(j==this.width)
+			if(j==this.width-1)
 			return true;	
 			break;
 		
 		case "South": 
-			if(i==this.length)
+			if(i==this.length-1)
 				return true;
 			     break;
 		case "West": 
@@ -201,6 +211,7 @@ public class Grid {
 	public boolean facingARock(int i, int j,String orientation)
 	{
 		Cell nextCell = getNextCell(i, j, orientation);
+//		System.out.println(nextCell.i + " , " + nextCell.j + " " + nextCell.elements);
 		if(nextCell.elements.contains("Rock")){
 			return true;
 		}
@@ -212,10 +223,13 @@ public class Grid {
 	{
 		if(facingAnEdge(i, j, orientation))
 		{
+			//we should never be here
 			System.err.println("Ahmed Wageeh says: trying to get next cell while facing edge");
 			//Return same cell cause forward should make you stuck there
 			return this.grid[i][j];
 		}
+		
+//		System.out.println("["+i+","+j+"]");
 		switch(orientation)
 		{
 
@@ -233,10 +247,12 @@ public class Grid {
 		return null;
 	}
 	
-	public boolean rockCanMove(int i, int j,String orientation)
+	public boolean rockCanMove(int i, int j,String orientation)	
 	{
+		if(facingAnEdge(i, j, orientation))
+			return false;
 		Cell nextCell = getNextCell(i, j, orientation);
-		if(nextCell.elements.contains("Rock") || nextCell.elements.contains("Immovable") || facingAnEdge(i, j, orientation)){
+		if(nextCell.elements.contains("Rock") || nextCell.elements.contains("Immovable")){
 			return false;
 		}
 		return true;
@@ -246,31 +262,54 @@ public class Grid {
 	public void moveR2D2(int i, int j, String orientation)
 	{
 		Cell nextCell = getNextCell(i, j, orientation);
-		nextCell.addElement("R2D2");
+		System.out.println(nextCell);
 		this.grid[i][j].removeElement("R2D2");
+		//this.r2d2.removeElement("R2D2");
+		nextCell.addElement("R2D2");
+		
+		System.out.println("old cell " + this.r2d2.i + "," + this.r2d2.j + " " + this.r2d2.elements);
+		this.r2d2 = nextCell;
+		System.out.println("new cell " + this.r2d2.i + "," + this.r2d2.j+ " " + this.r2d2.elements);
+
+		
+		if(this.r2d2.elements.contains("Teleportal"))
+			this.atTeleportalCell = true;
+		else
+			this.atTeleportalCell = false;
+	
 	}
 	
 	public void moveRock(int i, int j, String orientation)
 	{
+		
+		System.out.println("i moved a rock");
+		
+		Cell rockCell = grid[i][j];
 		Cell nextCell = getNextCell(i, j, orientation);
 		nextCell.addElement("Rock");
 		this.grid[i][j].removeElement("Rock");
+		
+		if(rockCell.elements.contains("Pad") && !nextCell.elements.contains("Pad"))
+			this.numberOfPadsRemaningWithoutRocks++;
+		if(!rockCell.elements.contains("Pad") && nextCell.elements.contains("Pad"))
+			this.numberOfPadsRemaningWithoutRocks--;
+			
+		
+		
 	}
 	
-	public static void main(String[] args) {
-		Grid g = new Grid(3, 3);
-
-		g.initializeGrid();
-		g.showGrid();
-		 
-		System.out.println(g.r2d2Orientation);
-		
-		g.rotateLeft();
-		
-		System.out.println(g.r2d2Orientation);
-
-	}
-	
-	
+//	public static void main(String[] args) {
+//		Grid g = new Grid(3, 3);
+//
+//		g.showGrid();
+//		 
+//		System.out.println(g.r2d2Orientation);
+//		
+//		g.rotateLeft();
+//		
+//		System.out.println(g.r2d2Orientation);
+//
+//	}
+//		
 
 }
