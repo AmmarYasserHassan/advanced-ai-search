@@ -109,7 +109,19 @@ public class Grid {
 	public void showGrid() {
 		for (int i = 0; i < this.length; i++) {
 			for (int j = 0; j < this.width; j++) {
-				System.out.print(this.grid[i][j].toString() + " | ");
+				System.out.print(this.grid[i][j].toString() + "  ");
+				if(this.grid[i][j].elements.contains("R2D2"))
+				{
+				switch(this.r2d2Orientation)
+				{
+				case "North": System.out.print(" ^ ");break;
+				case "East": System.out.print(" > ");break;
+				case "West": System.out.print(" < ");break;
+				case "South": System.out.print(" v ");break;
+				default: break;
+				}
+				}
+				System.out.print(" | ");
 			}			
 			System.out.println();
 			System.out.println();

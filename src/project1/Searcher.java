@@ -30,10 +30,10 @@ public class Searcher {
 				
 		int iterations = 0;
 		
-		while(iterations<1)
-		{
-//		while(!queue.isEmpty())
+//		while(iterations<1)
 //		{
+		while(!queue.isEmpty())
+		{
 		
 //		while(numberOfNodesExlored<600000)
 //		{
@@ -67,6 +67,9 @@ public class Searcher {
 			queue.enque(childern, strategy);
 			
 			iterations++;
+			
+			if(iterations%100000==0)
+				System.out.println(iterations);
 		}
 		
 		System.out.println("Reached end of the queue without finding a goal state, termintaed after " + iterations + " interation");
@@ -108,15 +111,15 @@ public class Searcher {
 		}
 		pathToGoal.add(initialState);
 		
-		initialState.grid.showGrid();
+		//initialState.grid.showGrid();
 		
 		Collections.reverse(pathToGoal);
 		
-//        for (int i = 0; i < pathToGoal.size(); i++) {
-//			pathToGoal.get(i).grid.showGrid();
-//			System.out.println(pathToGoal.get(i).actionTakenFromParentToReachThisNode);
-//			System.out.println();
-//		}		
+        for (int i = 0; i < pathToGoal.size(); i++) {
+			pathToGoal.get(i).grid.showGrid();
+			System.out.println(pathToGoal.get(i).actionTakenFromParentToReachThisNode);
+			System.out.println();
+		}		
 	
 	}
 	
@@ -181,7 +184,7 @@ public class Searcher {
 		if(operation.equals("F"))
 		{
 			if(parentNode.grid.facingAnEdge(parentNode.grid.r2d2, parentNode.grid.r2d2Orientation)){
-//				System.out.println("facing an edge " + parentNode.grid.r2d2Orientation);
+//				System.out.println("facing an edge " );
 				return null;
 				}
 			if(parentNode.grid.facingAnObstacle(parentNode.grid.r2d2, parentNode.grid.r2d2Orientation)){
@@ -198,8 +201,9 @@ public class Searcher {
 					   int costToReachThisNode = ++parentNode.costToReachThisNode;
 					   Node childNode = new Node(parentNode.grid.copy(),costToReachThisNode,parentNode,operation);
 					   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
-					   childNode.grid.moveRock(rockCell, parentNode.grid.r2d2Orientation);
-                       childNode.grid.moveR2D2(parentNode.grid.r2d2, parentNode.grid.r2d2Orientation);
+					   rockCell = childNode.grid.getNextCell(childNode.grid.r2d2, childNode.grid.r2d2Orientation);
+					   childNode.grid.moveRock(rockCell, childNode.grid.r2d2Orientation);
+                       childNode.grid.moveR2D2(childNode.grid.r2d2, childNode.grid.r2d2Orientation);
                        return childNode;
 				}
 				else
@@ -209,12 +213,12 @@ public class Searcher {
 				}
 						
 			}
-//			System.out.println("facing nothing " + parentNode.grid.r2d2Orientation);
+//			System.out.println("facing nothing ");
 			
 			   int costToReachThisNode = ++parentNode.costToReachThisNode;
 			   Node childNode = new Node(parentNode.grid.copy(),costToReachThisNode,parentNode,operation);
 			   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
-			   childNode.grid.moveR2D2(parentNode.grid.r2d2, parentNode.grid.r2d2Orientation);
+			   childNode.grid.moveR2D2(childNode.grid.r2d2, childNode.grid.r2d2Orientation);
                return childNode;
 			
 			
@@ -371,13 +375,13 @@ public class Searcher {
         Cell [][] g = new Cell[4][4];
         g[0][0] = new Cell(0,0);
         g[0][1] = new Cell(0,1);
-        g[0][2] = new Cell(0,2);
+        g[0][2] = new Cell(0,2,"R2D2");
         g[0][3] = new Cell(0,3);
         
-        g[1][0] = new Cell(1,0,"R2D2");
+        g[1][0] = new Cell(1,0);
         g[1][1] = new Cell(1,1);
         g[1][2] = new Cell(1,2);
-        g[1][3] = new Cell(0,3,"Rock");
+        g[1][3] = new Cell(1,3,"Rock");
         
         g[2][0] = new Cell(2,0);
         g[2][1] = new Cell(2,1);
@@ -385,10 +389,10 @@ public class Searcher {
         g[2][3] = new Cell(2,3, "Pad");
         
         
-        g[3][0] = new Cell(2,0);
-        g[3][1] = new Cell(2,1);
-        g[3][2] = new Cell(2,2,"Teleportal");
-        g[3][3] = new Cell(2,3);
+        g[3][0] = new Cell(3,0);
+        g[3][1] = new Cell(3,1);
+        g[3][2] = new Cell(3,2,"Teleportal");
+        g[3][3] = new Cell(3,3);
        
         
        Grid grid = new Grid(4,4);
@@ -404,12 +408,15 @@ public class Searcher {
 	public static void main(String [] args)
 	{
 		
-		Node init = initialize(3,3);
+		Node init = initialize(4,4);
 		//init.grid = testingGrid6();
 		
-		init.grid = testingGrid3();
-//		init.grid = testingGrid2();
+		init.grid = testingGrid2();
+///		init.grid = testingGrid2();
 		init.grid.showGrid();
+		
+		
+		
 //		System.out.println(init.grid.numberOfPads);
 //		System.out.println(init.grid.r2d2Orientation);
 //		System.out.println(init.grid.r2d2);
