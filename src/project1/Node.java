@@ -13,6 +13,9 @@ public class Node {
 	
 	// h(n)
 	int estimatedCostFromThisNodeToTheGoal;
+	
+	// For testing purposes
+	String name;
 
 	public Node(Grid grid,int costToReachThisNode,
 			Node parent, String actionTakenFromParentToReachThisNode) {
@@ -22,6 +25,10 @@ public class Node {
 		this.actionTakenFromParentToReachThisNode = actionTakenFromParentToReachThisNode;
 	}
    
+	public Node(String name)
+	{
+		this.name = name;
+	}
 
 	public Node(Node Parent)
 	{

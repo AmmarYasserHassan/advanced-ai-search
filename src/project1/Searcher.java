@@ -6,7 +6,7 @@ import java.util.Collections;
 public class Searcher {
 
 	static StatesQueue queue = new StatesQueue(); 
-	static String [] operators = {"RR","RL","F"}; 
+	static String [] operators = {"F","RR","RL"}; 
 	static ArrayList<Node> previousStates = new ArrayList<Node>();
 	static int numberOfNodesEnqueued = 0;
 	
@@ -26,11 +26,17 @@ public class Searcher {
 	public static Node search(Node initialState,String strategy, boolean visualize)
 	{
 		
+		if(initialState.grid.infeasible())
+		 return null;
+			
+		
 		queue.enque(initialState, "Initial State");
 				
 		int iterations = 0;
 		
-//		while(iterations<1)
+		
+		
+//		while(iterations<3)
 //		{
 		while(!queue.isEmpty())
 		{
@@ -40,11 +46,11 @@ public class Searcher {
 			Node currentNode = queue.deque();
 			
 //			System.out.println();
-//			System.out.println("-----------------------------------------------------" );
+//			System.out.println("-----------------------------------------------------" + iterations );
 //			System.out.println();
 //			currentNode.grid.showGrid();
 //			System.out.println(currentNode.grid.r2d2Orientation);
-//		//	System.out.println(" Parent " + currentNode.Parent.grid.r2d2.i +" ,"+ currentNode.Parent.grid.r2d2.j);
+//			System.out.println(currentNode.actionTakenFromParentToReachThisNode);
 //			System.out.println();
 //			System.out.println("-----------------------------------------------------" );
 //			System.out.println();
@@ -134,8 +140,16 @@ public class Searcher {
 	{
 		ArrayList<Node> childern = new ArrayList<Node>();
 		Node newChild;
+		boolean canOperate = true;
 		for(String operator: operators)
 		{  
+			
+			if(n.actionTakenFromParentToReachThisNode.equals("RR") && operator.equals("RL") ||
+			n.actionTakenFromParentToReachThisNode.equals("RL") && operator.equals("RR"))
+				canOperate = false;
+			
+			if(canOperate)
+			{
 			newChild = operate(n,operator);
 			if(newChild != null)
 			{
@@ -154,6 +168,7 @@ public class Searcher {
 				//}
 			 childern.add(newChild);
 			 
+			}
 			}
 		}
 		
@@ -370,15 +385,43 @@ public class Searcher {
         return grid;
 	}
 	
+	public static Grid testingGrid1()
+	{
+        Cell [][] g = new Cell[3][3];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1);
+        g[0][2] = new Cell(0,2,"Pad");
+        
+        g[1][0] = new Cell(1,0,"Teleportal");
+        g[1][1] = new Cell(1,1,"Rock");
+        g[1][2] = new Cell(1,2);
+        
+        g[2][0] = new Cell(2,0,"R2D2");
+        g[2][1] = new Cell(2,1);
+        g[2][2] = new Cell(2,2);
+         
+       
+        
+       Grid grid = new Grid(3,3);
+       grid.grid=g;
+       grid.r2d2Orientation = "South";
+       grid.r2d2 = g[2][0];
+       
+       
+        
+        return grid;
+	}
+	
+	
 	public static Grid testingGrid2()
 	{
         Cell [][] g = new Cell[4][4];
         g[0][0] = new Cell(0,0);
         g[0][1] = new Cell(0,1);
-        g[0][2] = new Cell(0,2,"R2D2");
+        g[0][2] = new Cell(0,2);
         g[0][3] = new Cell(0,3);
         
-        g[1][0] = new Cell(1,0);
+        g[1][0] = new Cell(1,0,"R2D2");
         g[1][1] = new Cell(1,1);
         g[1][2] = new Cell(1,2);
         g[1][3] = new Cell(1,3,"Rock");
@@ -405,14 +448,49 @@ public class Searcher {
         return grid;
 	}
 	
+	public static Grid testingGrid8()
+	{
+        Cell [][] g = new Cell[4][4];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1);
+        g[0][2] = new Cell(0,2,"Rock");
+        g[0][3] = new Cell(0,3,"Immovable");
+        
+        g[1][0] = new Cell(1,0,"R2D2");
+        g[1][1] = new Cell(1,1);
+        g[1][2] = new Cell(1,2,"Immovable");
+        g[1][3] = new Cell(1,3);
+        
+        g[2][0] = new Cell(2,0);
+        g[2][1] = new Cell(2,1);
+        g[2][2] = new Cell(2,2);
+        g[2][3] = new Cell(2,3);
+        
+        
+        g[3][0] = new Cell(3,0);
+        g[3][1] = new Cell(3,1);
+        g[3][2] = new Cell(3,2, "Pad");
+        g[3][3] = new Cell(3,3,"Teleportal");
+       
+        
+       Grid grid = new Grid(4,4);
+       grid.grid=g;
+       grid.r2d2Orientation = "East";
+       grid.r2d2 = g[1][0];
+       
+       
+        
+        return grid;
+	}
+	
 	public static void main(String [] args)
 	{
 		
 		Node init = initialize(4,4);
-		//init.grid = testingGrid6();
+	   // init.grid = testingGrid8();
 		
-		init.grid = testingGrid2();
-///		init.grid = testingGrid2();
+		//init.grid = testingGrid();
+//		init.grid = testingGrid2();
 		init.grid.showGrid();
 		
 		

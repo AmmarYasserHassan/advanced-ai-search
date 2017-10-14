@@ -75,7 +75,7 @@ public class StatesQueue
 
 		for(int i=0; i< this.states.size();i++)
 		{
-			System.out.println(this.states.get(i).costToReachThisNode);
+			System.out.println(this.states.get(i).name);
 		}
 
 	}
@@ -87,5 +87,22 @@ public class StatesQueue
 	}
 	
 
-	
+	public static void main(String []args){
+		
+//		Node n1 = new Node("N1");
+//		Node n2 = new Node("N2");
+//		Node n3 = new Node("N3");
+//		Node n4 = new Node("N4");
+//		
+//		StatesQueue s = new StatesQueue();
+//		
+//		s.enque(n1,"DFS");
+//		s.enque(n2,"DFS");
+//		s.enque(n3,"DFS");
+//		s.enque(n4,"DFS");
+//		
+//		s.show();
+		
+		
+	}
 }

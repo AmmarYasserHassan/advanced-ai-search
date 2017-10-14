@@ -56,8 +56,8 @@ public class Grid {
 		//TODO
 		
 		int maxPadsRocks = (int) ((this.length*this.width-2)/2)-1;
-//		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
-		int numberOfPadsToBeAdded = 1;
+		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
+		//int numberOfPadsToBeAdded = 1;
 		int numberOfRocksToBeAdded = numberOfPadsToBeAdded;
 		this.numberOfPadsRemaningWithoutRocks = numberOfRocksToBeAdded;
  		
@@ -309,6 +309,98 @@ public class Grid {
 		
 	}
 	
+	public boolean infeasible() {
+		return (thereIsARockInACorner() || thereIsARockSidedByAnEdgeAndNoReachablePadInFront());
+	}
+	
+	public boolean thereIsARockInACorner() {
+		
+		boolean result = (  
+				   this.grid[0][0].elements.contains("Rock") 
+				|| this.grid[0][this.width-1].elements.contains("Rock")
+				|| this.grid[this.length-1][0].elements.contains("Rock") 
+				|| this.grid[this.length-1][this.width-1].elements.contains("Rock")
+				);
+		
+		if(result)
+			System.out.println("Rock at a corner, infeasible Solution");
+		return result;
+	}
+	
+	
+
+	public boolean thereIsARockSidedByAnEdgeAndNoReachablePadInFront() {
+		
+		boolean containsRock = false;
+		boolean containsPad = false;
+		boolean padInFrontOfRock = false;
+		
+		for(int j =0; j<this.width;j++)
+		{
+			if(this.grid[0][j].elements.contains("Rock"))
+				containsRock = true;
+			if(this.grid[0][j].elements.contains("Pad"))
+				containsPad = true;
+		}
+		
+		if(containsRock)
+			if(containsPad)
+			{
+				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
+				return true;
+			}
+				
+		
+		for(int j =0; j<this.width;j++)
+		{
+			if(this.grid[this.length-1][j].elements.contains("Rock"))
+				containsRock = true;
+			if(this.grid[this.length-1][j].elements.contains("Pad"))
+				containsPad = true;
+		}
+		
+		if(containsRock)
+			if(containsPad)
+			{
+				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
+				return true;
+			}
+		
+		for(int i =0; i<this.length;i++)
+		{
+			if(this.grid[i][0].elements.contains("Rock"))
+				containsRock = true;
+			if(this.grid[i][0].elements.contains("Pad"))
+				containsPad = true;
+		}
+		
+		if(containsRock)
+			if(containsPad)
+			{
+				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
+				return true;
+			}
+		
+		for(int i =0; i<this.length;i++)
+		{
+			
+			if(this.grid[i][this.width-1].elements.contains("Rock"))
+				containsRock = true;
+			if(this.grid[i][this.width-1].elements.contains("Pad"))
+				containsPad = true;
+		}
+		
+		if(containsRock)
+			if(containsPad)
+			{
+				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
+				return true;
+			}
+		
+		return padInFrontOfRock;
+		
+	}
+
 	public static void main(String[] args) {
 		
 		Grid g = new Grid(3, 3);
