@@ -2,21 +2,18 @@ package project1;
 
 public class Node {
 	
-	//These operators together form the state
+	// The state
 	Grid grid;
-	
-
 	
 	// g(n)
 	int costToReachThisNode;
+	
 	Node Parent;
 	String actionTakenFromParentToReachThisNode;
 	
 	// h(n)
 	int estimatedCostFromThisNodeToTheGoal;
 
-	
-	
 	public Node(Grid grid,int costToReachThisNode,
 			Node parent, String actionTakenFromParentToReachThisNode) {
 		this.grid = grid;
@@ -36,6 +33,10 @@ public class Node {
 		this.estimatedCostFromThisNodeToTheGoal = heuristicValue;
 	}
 
+	public int getEstimatedCostFromANodeToTheGoal()
+	{
+		return this.estimatedCostFromThisNodeToTheGoal;
+	}
 
 	@Override
 	public String toString() {
