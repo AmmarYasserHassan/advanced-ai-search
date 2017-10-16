@@ -2,13 +2,15 @@ package project1;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class Searcher {
 
 	static StatesQueue queue = new StatesQueue(); 
 	static String [] operators = {"F","RR","RL"}; 
-	static ArrayList<Node> previousStates = new ArrayList<Node>();
+	static HashMap<String, Boolean> previousStates = new HashMap<String, Boolean>();
 	static int numberOfNodesEnqueued = 0;
+	static boolean eliminateRepeatedStates = true;
 	
 	public static Node initialize(int maxWidth, int maxHeight)
 	{
@@ -21,8 +23,7 @@ public class Searcher {
 		return initialState;
 		
 	}
-	
-	
+		
 	public static Node search(Node initialState,String strategy, boolean visualize)
 	{
 		
@@ -82,25 +83,6 @@ public class Searcher {
 		return null;
 	}
 	
-//	public static boolean R2D2Became2(Node n)
-//	{
-//		Grid g = n.grid;
-//		
-//		int counter = 0;
-//		
-//		for (int i = 0; i < g.length; i++) {
-//			for (int j = 0; j < g.width; j++) {
-//				if(g.grid[i][j].elements.contains("R2D2"))
-//					counter++;
-//			}
-//		}
-//		
-//		if(counter>1)
-//			return true;
-//		
-//		return false;
-//	}
-//	
 	public static void getSolution(Node initialState,String strategy, boolean visualize)
 	{
 		Node goal = search(initialState,strategy,visualize);
@@ -129,12 +111,10 @@ public class Searcher {
 	
 	}
 	
-	
 	public static boolean isGoal(Node currentNode) {
 
 		return (currentNode.grid.atTeleportalCell && currentNode.grid.numberOfPadsRemaningWithoutRocks == 0);
 	}
-
 
 	public static ArrayList<Node> expand(Node n)
 	{
@@ -153,6 +133,7 @@ public class Searcher {
 			newChild = operate(n,operator);
 			if(newChild != null)
 			{
+				
 				//if(operator.equals("F"))
 			//	{
 //				System.out.println();
@@ -166,7 +147,16 @@ public class Searcher {
 //				System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 //				System.out.println();
 				//}
-			 childern.add(newChild);
+				if(eliminateRepeatedStates){
+					if(!previousStates.containsKey(newChild.grid.getGridHash())){
+						childern.add(newChild);
+						previousStates.put(newChild.grid.getGridHash(), true);
+					}
+				}else{
+					childern.add(newChild);	
+				}
+				
+					
 			 
 			}
 			}
@@ -248,8 +238,7 @@ public class Searcher {
 	{
 		return 1;
 	}
-	
-	
+		
 	public static Grid testingGrid()
 	{
         Cell [][] g = new Cell[3][3];
@@ -271,7 +260,8 @@ public class Searcher {
        grid.grid=g;
        grid.r2d2Orientation = "East";
        grid.r2d2 = g[1][0];
-       
+       grid.numberOfPadsRemaningWithoutRocks = 1;
+
        
         
         return grid;
@@ -411,8 +401,7 @@ public class Searcher {
         
         return grid;
 	}
-	
-	
+		
 	public static Grid testingGrid2()
 	{
         Cell [][] g = new Cell[4][4];
@@ -442,6 +431,7 @@ public class Searcher {
        grid.grid=g;
        grid.r2d2Orientation = "East";
        grid.r2d2 = g[1][0];
+       grid.numberOfPadsRemaningWithoutRocks = 1;
        
        
         
@@ -483,41 +473,48 @@ public class Searcher {
         return grid;
 	}
 	
-	public static void main(String [] args)
+	public static Grid testingGrid9()
 	{
-		
+        Cell [][] g = new Cell[3][3];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1,"Immovable");
+        g[0][2] = new Cell(0,2,"Immovable");
+        
+        g[1][0] = new Cell(1,0,"R2D2");
+        g[1][1] = new Cell(1,1,"Rock");
+        g[1][2] = new Cell(1,2,"Pad");
+        g[1][1].addElement("Teleportal");
+        
+        g[2][0] = new Cell(2,0);
+        g[2][1] = new Cell(2,1,"Teleportal");
+        g[2][2] = new Cell(2,2);
+         
+       
+        
+       Grid grid = new Grid(3,3);
+       grid.grid=g;
+       grid.r2d2Orientation = "West";
+       grid.r2d2 = g[1][0];
+       grid.numberOfPadsRemaningWithoutRocks = 1;
+
+       
+        
+        return grid;
+	}
+
+	public static void main(String [] args){
+
 		Node init = initialize(4,4);
-	   // init.grid = testingGrid8();
-		
-		//init.grid = testingGrid();
-//		init.grid = testingGrid2();
+//		init.grid = testingGrid();
+		init.grid = testingGrid2();
 		init.grid.showGrid();
-		
-		
-		
-//		System.out.println(init.grid.numberOfPads);
-//		System.out.println(init.grid.r2d2Orientation);
-//		System.out.println(init.grid.r2d2);
-		
-//		
+		getSolution(init, "BFS", false);
 
 		
-//		testingGrid().showGrid();
-//		System.out.println(testingGrid().r2d2Orientation);
-		
-	  // search(init, "BFS",false).grid.showGrid();
-		
-		getSolution(init, "BFS", false);
-		
-//		init.grid.showGrid();
-//		System.out.println(init.grid.r2d2Orientation);
-//		
-//		System.out.println("XXXXXXXXXXXXXX");
-//		
-//		operate(init, "F").grid.showGrid();;
-		
-		
-		
+
+
+
+
 	}
 
 	
