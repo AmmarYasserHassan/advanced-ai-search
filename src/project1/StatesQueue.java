@@ -47,8 +47,38 @@ public class StatesQueue
 	        }
 	    });
 		break;
-		case "GR":
-		case "AS" : break;
+		case "GRS":
+			this.states.add(n);
+			Collections.sort(this.states, new Comparator<Node>() {
+		        public int compare(Node n1, Node n2)
+		        {
+
+		            if(n1.estimatedCostFromThisNodeToTheGoal==n2.estimatedCostFromThisNodeToTheGoal)
+		            	return 0;
+		             
+		            if(n1.estimatedCostFromThisNodeToTheGoal<n2.estimatedCostFromThisNodeToTheGoal)
+		            	return -1;
+		            
+		            return 1;
+		        }
+		    });
+			break;
+		case "ASS" :
+			this.states.add(n);
+			Collections.sort(this.states, new Comparator<Node>() {
+		        public int compare(Node n1, Node n2)
+		        {
+
+		            if(n1.estimatedCostFromThisNodeToTheGoal+n1.costToReachThisNode==n2.estimatedCostFromThisNodeToTheGoal+n2.costToReachThisNode)
+		            	return 0;
+		             
+		            if(n1.estimatedCostFromThisNodeToTheGoal+n1.costToReachThisNode<n2.estimatedCostFromThisNodeToTheGoal+n2.costToReachThisNode)
+		            	return -1;
+		            
+		            return 1;
+		        }
+		    });
+			break;
 		}
 		
 			
