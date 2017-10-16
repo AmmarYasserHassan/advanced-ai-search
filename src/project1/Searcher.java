@@ -34,8 +34,6 @@ public class Searcher {
 			
 		
 		queue.enque(initialState, "Initial State");
-				
-		
 		
 //		while(iterations<7)
 //		{
@@ -78,6 +76,7 @@ public class Searcher {
 	
 	public static void getSolution(Node initialState,String strategy, boolean visualize)
 	{
+	
 		Node goal = search(initialState,strategy,visualize);
 		ArrayList<Node> pathToGoal = new ArrayList<Node>();
 		
@@ -118,47 +117,32 @@ public class Searcher {
 		boolean canOperate = true;
 		for(String operator: operators)
 		{  
-			
+
 			if(n.actionTakenFromParentToReachThisNode.equals("RR") && operator.equals("RL") ||
-			n.actionTakenFromParentToReachThisNode.equals("RL") && operator.equals("RR"))
+					n.actionTakenFromParentToReachThisNode.equals("RL") && operator.equals("RR"))
 				canOperate = false;
-			
+
 			if(canOperate)
 			{
-			newChild = operate(n,operator);
-			if(newChild != null)
-			{
-				
-				//if(operator.equals("F"))
-			//	{
-//				System.out.println();
-//				System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
-//				System.out.println();
-//				newChild.grid.showGrid();
-//				System.out.println(operator);
-//				System.out.println("Parent " + newChild.Parent.grid.r2d2.i +" ,"+ newChild.Parent.grid.r2d2.j);
-//				System.out.println(newChild.grid.r2d2Orientation);
-//				System.out.println();
-//				System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-//				System.out.println();
-				//}
-				if(eliminateRepeatedStates){
-					if(!previousStates.containsKey(newChild.grid.getGridHash())){
-						childern.add(newChild);
-						previousStates.put(newChild.grid.getGridHash(), true);
+				newChild = operate(n,operator);
+				if(newChild != null)
+				{
+
+					if(eliminateRepeatedStates){
+						if(!previousStates.containsKey(newChild.grid.getGridHash())){
+							childern.add(newChild);
+							previousStates.put(newChild.grid.getGridHash(), true);
+						}
+					}else{
+						childern.add(newChild);	
 					}
-				}else{
-					childern.add(newChild);	
+
 				}
-				
-					
-			 
-			}
 			}
 		}
-		
+
 		return childern;
-		
+
 	}
 	
 	public static Node operate(Node parentNode,String operation)
@@ -233,6 +217,56 @@ public class Searcher {
 	public static int estimatedCostFromANodeToTheGoal(Node node)
 	{
 		return 1;
+	}
+	
+	
+	public static Node depthLimitedSearch(Node initialState,int limit)
+	{
+		queue.enque(initialState, "Initial State");
+		
+		while(!queue.isEmpty())
+		{
+		
+			Node currentNode = queue.deque();
+			nodesExpanded++;
+			if(isGoal(currentNode))
+			{
+				System.out.println("REACHED A SOLUTION! in " + limit + " depth and in " + nodesExpanded + " iterations");
+				return currentNode;
+			}
+			
+			if(currentNode.depth<limit)
+			{
+			ArrayList<Node> childern = expand(currentNode);
+			numberOfNodesEnqueued+= childern.size();
+			queue.enque(childern, "DFS");	
+			}
+				
+			if(nodesExpanded%100000==0)
+			{
+				System.out.println(queue.size());
+				System.out.println(nodesExpanded);
+			}
+	
+		}
+		
+		return null;
+	}
+	
+	
+	public static Node iterativeDeepening(Node initialState)
+	{
+		int limit = 0;
+        while(true)
+        {
+        	Node goal = depthLimitedSearch(initialState, limit);
+        	if(goal!=null)
+        	       return goal;
+        	previousStates.clear();
+        	numberOfNodesEnqueued = 0;
+        	nodesExpanded = 0;
+        	limit++;	
+        }
 	}
 		
 	public static Grid testingGrid()
@@ -311,6 +345,7 @@ public class Searcher {
        grid.grid=g;
        grid.r2d2Orientation = "East";
        grid.r2d2 = g[0][1];
+       grid.numberOfPadsRemaningWithoutRocks = 1;
        
        
         
@@ -640,11 +675,40 @@ public class Searcher {
 
 	public static void main(String [] args){
 
-		Node init = initialize(5,5);
-		init.grid = testingGrid12();
+		Node init = initialize(3,3);
+		init.grid = testingGrid();
 		init.grid.showGrid();
-		//getSolution(init, "DFS", false);
-		getSolution(init, "UCS", false);
+	     
+//	   getSolution(init, "DFS", false);
+//	   getSolution(init, "UCS", false);
+		
+		Node goal = iterativeDeepening(init);
+//		Node goal = depthLimitedSearch(init, 13);
+		
+		ArrayList<Node> pathToGoal = new ArrayList<Node>();
+		if(goal != null)
+		{
+			while(goal.Parent!=null)
+			{
+				pathToGoal.add(goal);
+				goal = goal.Parent;
+			}
+			pathToGoal.add(init);
+			
+
+			
+			Collections.reverse(pathToGoal);
+			
+	        for (int i = 0; i < pathToGoal.size(); i++) {
+				pathToGoal.get(i).grid.showGrid();
+				System.out.println(pathToGoal.get(i).actionTakenFromParentToReachThisNode);
+				System.out.println();
+			}		
+		
+	       System.out.println("Path to goal consists of: "+  pathToGoal.size() + " moves"); 
+		}
+		
+       
 
 	}
 

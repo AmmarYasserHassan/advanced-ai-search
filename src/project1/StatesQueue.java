@@ -54,6 +54,14 @@ public class StatesQueue
 			
 	}
 	
+	
+	public void limitedDepth(int maxDepth, Node n)
+	{
+		if(n.depth<maxDepth){
+			this.states.add(0,n);
+		}
+	}
+	
 	public Node deque()
 	{
 		Node n = this.states.get(0);
