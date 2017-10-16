@@ -7,6 +7,7 @@ public class Node {
 	
 	// g(n)
 	int costToReachThisNode;
+	int depth;
 	
 	Node Parent;
 	String actionTakenFromParentToReachThisNode;
@@ -18,11 +19,12 @@ public class Node {
 	String name;
 
 	public Node(Grid grid,int costToReachThisNode,
-			Node parent, String actionTakenFromParentToReachThisNode) {
+			Node parent, String actionTakenFromParentToReachThisNode,int depth) {
 		this.grid = grid;
 		this.costToReachThisNode = costToReachThisNode;
 		Parent = parent;
 		this.actionTakenFromParentToReachThisNode = actionTakenFromParentToReachThisNode;
+		this.depth = depth;
 	}
    
 	public Node(String name)

@@ -31,7 +31,7 @@ public class StatesQueue
 		case "BFS" : this.states.add(n); break;
 		case "DFS" : this.states.add(0,n); break;
 		case "IDS" : this.states.add(0,n); break;
-		case "UC" : this.states.add(n);
+		case "UCS" : this.states.add(n);
 		
 		Collections.sort(this.states, new Comparator<Node>() {
 	        public int compare(Node n1, Node n2)

@@ -10,14 +10,16 @@ public class Searcher {
 	static String [] operators = {"F","RR","RL"}; 
 	static HashMap<String, Boolean> previousStates = new HashMap<String, Boolean>();
 	static int numberOfNodesEnqueued = 0;
+	static int nodesExpanded = 0;
 	static boolean eliminateRepeatedStates = true;
 	
 	public static Node initialize(int maxWidth, int maxHeight)
 	{
 		Grid initialGrid = new Grid(maxWidth,maxHeight);
 		int costToReachThisNode = 0;
+		int depth = 0;
 		String actionTakenFromParentToReachThisNode = "Nothing";
-		Node initialState = new Node(initialGrid,costToReachThisNode,null,actionTakenFromParentToReachThisNode);
+		Node initialState = new Node(initialGrid,costToReachThisNode,null,actionTakenFromParentToReachThisNode,depth);
 		int estimatedCostFromThisNodeToTheGoal = estimatedCostFromANodeToTheGoal(initialState);
 		initialState.setEstimatedCostFromANodeToTheGoal(estimatedCostFromThisNodeToTheGoal);
 		return initialState;
@@ -33,8 +35,6 @@ public class Searcher {
 		
 		queue.enque(initialState, "Initial State");
 				
-		int iterations = 0;
-		
 		
 		
 //		while(iterations<7)
@@ -57,7 +57,7 @@ public class Searcher {
 			 
 			if(isGoal(currentNode))
 			{
-				System.out.println("REACHED A SOLUTION! in " + iterations);
+				System.out.println("REACHED A SOLUTION! in " + nodesExpanded);
 				return currentNode;
 			}
 			ArrayList<Node> childern = expand(currentNode);
@@ -66,13 +66,13 @@ public class Searcher {
 //				Collections.reverse(childern);
 			queue.enque(childern, strategy);
 			
-			iterations++;
+			nodesExpanded++;
 			
-			if(iterations%100000==0)
-				System.out.println(iterations);
+			if(nodesExpanded%100000==0)
+				System.out.println(nodesExpanded);
 		}
 		
-		System.out.println("Reached end of the queue without finding a goal state, termintaed after " + iterations + " interation");
+		System.out.println("Reached end of the queue without finding a goal state, termintaed after " + nodesExpanded + " iterations");
 		return null;
 	}
 	
@@ -102,6 +102,8 @@ public class Searcher {
 			System.out.println();
 		}		
 	
+       System.out.println("Path to goal consists of: "+  pathToGoal.size() + " moves"); 
+        
 	}
 	
 	public static boolean isGoal(Node currentNode) {
@@ -161,19 +163,20 @@ public class Searcher {
 	
 	public static Node operate(Node parentNode,String operation)
 	{
+		int newDepth = parentNode.depth+1;
 		
 		if(operation.equals("RR"))
 		{  
-		   int costToReachThisNode = ++parentNode.costToReachThisNode;
-		   Node childNode = new Node(parentNode.grid.copy(),costToReachThisNode,parentNode,operation);
+		   parentNode.costToReachThisNode+=2;
+		   Node childNode = new Node(parentNode.grid.copy(),parentNode.costToReachThisNode,parentNode,operation,newDepth);
 		   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
 		   childNode.grid.rotateRight();
 		   return childNode;
 		}
 		if(operation.equals("RL"))
 		{  
-		   int costToReachThisNode = ++parentNode.costToReachThisNode;
-		   Node childNode = new Node(parentNode.grid.copy(),costToReachThisNode,parentNode,operation);
+		   parentNode.costToReachThisNode+=2;
+		   Node childNode = new Node(parentNode.grid.copy(),parentNode.costToReachThisNode,parentNode,operation,newDepth);
 		   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
 		   childNode.grid.rotateLeft();
 		   return childNode;
@@ -196,8 +199,8 @@ public class Searcher {
 				if(parentNode.grid.rockCanMove(rockCell, parentNode.grid.r2d2Orientation))
 				{     
 //					System.out.println("rock can move");
-					   int costToReachThisNode = ++parentNode.costToReachThisNode;
-					   Node childNode = new Node(parentNode.grid.copy(),costToReachThisNode,parentNode,operation);
+					   ++parentNode.costToReachThisNode;
+					   Node childNode = new Node(parentNode.grid.copy(),parentNode.costToReachThisNode,parentNode,operation,newDepth);
 					   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
 					   rockCell = childNode.grid.getNextCell(childNode.grid.r2d2, childNode.grid.r2d2Orientation);
 					   childNode.grid.moveRock(rockCell, childNode.grid.r2d2Orientation);
@@ -213,8 +216,8 @@ public class Searcher {
 			}
 //			System.out.println("facing nothing ");
 			
-			   int costToReachThisNode = ++parentNode.costToReachThisNode;
-			   Node childNode = new Node(parentNode.grid.copy(),costToReachThisNode,parentNode,operation);
+			   ++parentNode.costToReachThisNode;
+			   Node childNode = new Node(parentNode.grid.copy(),parentNode.costToReachThisNode,parentNode,operation,newDepth);
 			   childNode.setEstimatedCostFromANodeToTheGoal(estimatedCostFromANodeToTheGoal(childNode));
 			   childNode.grid.moveR2D2(childNode.grid.r2d2, childNode.grid.r2d2Orientation);
                return childNode;
@@ -389,7 +392,7 @@ public class Searcher {
        grid.grid=g;
        grid.r2d2Orientation = "South";
        grid.r2d2 = g[2][0];
-       
+       grid.numberOfPadsRemaningWithoutRocks = 1;
        
         
         return grid;
@@ -466,6 +469,99 @@ public class Searcher {
         return grid;
 	}
 	
+	public static Grid testingGrid10()
+	{
+        Cell [][] g = new Cell[5][5];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1);
+        g[0][2] = new Cell(0,2);
+        g[0][3] = new Cell(0,3);
+        g[0][4] = new Cell(0,4);
+        
+        g[1][0] = new Cell(1,0);
+        g[1][1] = new Cell(1,1,"Teleportal");
+        g[1][2] = new Cell(1,2);
+        g[1][3] = new Cell(1,3,"Immovable");
+        g[1][4] = new Cell(1,4,"R2D2");
+        
+        g[2][0] = new Cell(2,0);
+        g[2][1] = new Cell(2,1);
+        g[2][2] = new Cell(2,2,"Rock");
+        g[2][3] = new Cell(2,3);
+        g[2][4] = new Cell(2,4);
+        
+        
+        g[3][0] = new Cell(3,0);
+        g[3][1] = new Cell(3,1);
+        g[3][2] = new Cell(3,2);
+        g[3][3] = new Cell(3,3);
+        g[3][4] = new Cell(3,4,"Immovable");
+
+        g[4][0] = new Cell(4,0);
+        g[4][1] = new Cell(4,1);
+        g[4][2] = new Cell(4,2);
+        g[4][3] = new Cell(4,3);
+        g[4][4] = new Cell(4,4,"Pad");
+       
+        
+       Grid grid = new Grid(5,5);
+       grid.grid=g;
+       grid.r2d2Orientation = "West";
+       grid.r2d2 = g[1][4];
+       grid.numberOfPadsRemaningWithoutRocks =1;
+       
+       
+        
+        return grid;
+	}
+	
+	
+	public static Grid testingGrid11()
+	{
+        Cell [][] g = new Cell[5][5];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1);
+        g[0][2] = new Cell(0,2);
+        g[0][3] = new Cell(0,3);
+        g[0][4] = new Cell(0,4);
+        
+        g[1][0] = new Cell(1,0,"Pad");
+        g[1][1] = new Cell(1,1,"Teleportal");
+        g[1][2] = new Cell(1,2);
+        g[1][3] = new Cell(1,3,"Immovable");
+        g[1][4] = new Cell(1,4,"R2D2");
+        
+        g[2][0] = new Cell(2,0);
+        g[2][1] = new Cell(2,1);
+        g[2][2] = new Cell(2,2,"Rock");
+        g[2][3] = new Cell(2,3);
+        g[2][4] = new Cell(2,4);
+        
+        
+        g[3][0] = new Cell(3,0,"Rock");
+        g[3][1] = new Cell(3,1);
+        g[3][2] = new Cell(3,2);
+        g[3][3] = new Cell(3,3);
+        g[3][4] = new Cell(3,4,"Immovable");
+
+        g[4][0] = new Cell(4,0);
+        g[4][1] = new Cell(4,1);
+        g[4][2] = new Cell(4,2);
+        g[4][3] = new Cell(4,3);
+        g[4][4] = new Cell(4,4,"Pad");
+       
+        
+       Grid grid = new Grid(5,5);
+       grid.grid=g;
+       grid.r2d2Orientation = "West";
+       grid.r2d2 = g[1][4];
+       grid.numberOfPadsRemaningWithoutRocks =2;
+       
+       
+        
+        return grid;
+	}
+	
 	public static Grid testingGrid9()
 	{
 
@@ -495,14 +591,60 @@ public class Searcher {
         
         return grid;
 	}
+	
+	public static Grid testingGrid12()
+	{
+        Cell [][] g = new Cell[5][5];
+        g[0][0] = new Cell(0,0);
+        g[0][1] = new Cell(0,1);
+        g[0][2] = new Cell(0,2);
+        g[0][3] = new Cell(0,3);
+        g[0][4] = new Cell(0,4);
+        
+        g[1][0] = new Cell(1,0,"Pad");
+        g[1][1] = new Cell(1,1,"Teleportal");
+        g[1][2] = new Cell(1,2);
+        g[1][3] = new Cell(1,3,"Immovable");
+        g[1][4] = new Cell(1,4,"R2D2");
+        
+        g[2][0] = new Cell(2,0);
+        g[2][1] = new Cell(2,1,"Rock");
+        g[2][2] = new Cell(2,2,"Rock");
+        g[2][3] = new Cell(2,3);
+        g[2][4] = new Cell(2,4);
+        
+        
+        g[3][0] = new Cell(3,0);
+        g[3][1] = new Cell(3,1);
+        g[3][2] = new Cell(3,2);
+        g[3][3] = new Cell(3,3);
+        g[3][4] = new Cell(3,4,"Immovable");
+
+        g[4][0] = new Cell(4,0);
+        g[4][1] = new Cell(4,1);
+        g[4][2] = new Cell(4,2);
+        g[4][3] = new Cell(4,3);
+        g[4][4] = new Cell(4,4,"Pad");
+       
+        
+       Grid grid = new Grid(5,5);
+       grid.grid=g;
+       grid.r2d2Orientation = "West";
+       grid.r2d2 = g[1][4];
+       grid.numberOfPadsRemaningWithoutRocks =2;
+       
+       
+        
+        return grid;
+	}
 
 	public static void main(String [] args){
 
-		Node init = initialize(4,4);
-//		init.grid = testingGrid();
-		init.grid = testingGrid2();
+		Node init = initialize(5,5);
+		init.grid = testingGrid12();
 		init.grid.showGrid();
-		getSolution(init, "BFS", false);
+		//getSolution(init, "DFS", false);
+		getSolution(init, "UCS", false);
 
 	}
 
