@@ -1,5 +1,6 @@
 package project1;
 
+import java.util.HashMap;
 
 public class Grid {
 
@@ -57,7 +58,7 @@ public class Grid {
 		
 		int maxPadsRocks = (int) ((this.length*this.width-2)/2)-1;
 		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
-	    numberOfPadsToBeAdded = 1;
+	   // numberOfPadsToBeAdded = 1;
 		int numberOfRocksToBeAdded = numberOfPadsToBeAdded;
 		this.numberOfPadsRemaningWithoutRocks = numberOfRocksToBeAdded;
  		
@@ -129,7 +130,6 @@ public class Grid {
 		System.out.println(this.r2d2Orientation);
 	}
 
-	
 	
 	public void rotateRight()
 	{
@@ -344,7 +344,7 @@ public class Grid {
 		}
 		
 		if(containsRock)
-			if(containsPad)
+			if(!containsPad)
 			{
 				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 				return true;
@@ -360,7 +360,7 @@ public class Grid {
 		}
 		
 		if(containsRock)
-			if(containsPad)
+			if(!containsPad)
 			{
 				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 				return true;
@@ -375,7 +375,7 @@ public class Grid {
 		}
 		
 		if(containsRock)
-			if(containsPad)
+			if(!containsPad)
 			{
 				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 				return true;
@@ -391,7 +391,7 @@ public class Grid {
 		}
 		
 		if(containsRock)
-			if(containsPad)
+			if(!containsPad)
 			{
 				System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 				return true;
@@ -401,13 +401,44 @@ public class Grid {
 		
 	}
 
+	public String getGridHash(){
+		String hash = "";
+		for (int i = 0; i < this.length; i++) {
+			for (int j = 0; j < this.width; j++) {
+				hash += grid[i][j].getHash();
+			}
+		}
+		switch (r2d2Orientation) {
+		case "North":
+			hash += "1";
+			break;
+		case "East":
+			hash += "2";
+			break;
+		case "South":
+			hash += "3";
+			break;
+		case "West":
+			hash += "4";
+			break;
+
+		default:
+			break;
+		}
+		return hash;
+	}
+
 	public static void main(String[] args) {
 		
-		Grid g = new Grid(3, 3);
+		Grid g = Searcher.testingGrid();
 		g.showGrid();
-
-		Grid g2 = g.copy();
-		g2.showGrid();
+		System.out.println(g.getGridHash());
+		
+//		Grid g = new Grid(3, 3);
+//		g.showGrid();
+//
+//		Grid g2 = g.copy();
+//		g2.showGrid();
 		
 		//System.out.println();
 		 
