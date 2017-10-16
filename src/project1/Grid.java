@@ -57,7 +57,7 @@ public class Grid {
 		
 		int maxPadsRocks = (int) ((this.length*this.width-2)/2)-1;
 		int numberOfPadsToBeAdded = (int) (Math.random()*maxPadsRocks)+1;
-		//int numberOfPadsToBeAdded = 1;
+	    numberOfPadsToBeAdded = 1;
 		int numberOfRocksToBeAdded = numberOfPadsToBeAdded;
 		this.numberOfPadsRemaningWithoutRocks = numberOfRocksToBeAdded;
  		

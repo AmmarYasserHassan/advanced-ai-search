@@ -31,8 +31,6 @@ public class StatesQueue
 		case "BFS" : this.states.add(n); break;
 		case "DFS" : this.states.add(0,n); break;
 		case "IDS" : this.states.add(0,n); break;
-		case "GR":
-		case "AS" :
 		case "UC" : this.states.add(n);
 		
 		Collections.sort(this.states, new Comparator<Node>() {
@@ -49,6 +47,8 @@ public class StatesQueue
 	        }
 	    });
 		break;
+		case "GR":
+		case "AS" : break;
 		}
 		
 			

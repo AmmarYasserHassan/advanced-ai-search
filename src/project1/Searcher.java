@@ -25,9 +25,9 @@ public class Searcher {
 	
 	public static Node search(Node initialState,String strategy, boolean visualize)
 	{
-		
-		if(initialState.grid.infeasible())
-		 return null;
+//	TODO	
+//		if(initialState.grid.infeasible())
+//		 return null;
 			
 		
 		queue.enque(initialState, "Initial State");
@@ -36,13 +36,11 @@ public class Searcher {
 		
 		
 		
-//		while(iterations<3)
+//		while(iterations<7)
 //		{
 		while(!queue.isEmpty())
 		{
 		
-//		while(numberOfNodesExlored<600000)
-//		{
 			Node currentNode = queue.deque();
 			
 //			System.out.println();
@@ -54,14 +52,7 @@ public class Searcher {
 //			System.out.println();
 //			System.out.println("-----------------------------------------------------" );
 //			System.out.println();
-//
-//			
-//			if(R2D2Became2(currentNode))
-//			{
-//				System.out.println("iterations = " + iterations);
-//				return currentNode;
-//			}
-				
+			
 			 
 			if(isGoal(currentNode))
 			{
@@ -70,6 +61,8 @@ public class Searcher {
 			}
 			ArrayList<Node> childern = expand(currentNode);
 			numberOfNodesEnqueued+= childern.size();
+//			if(strategy.equals("DFS"))
+//				Collections.reverse(childern);
 			queue.enque(childern, strategy);
 			
 			iterations++;
@@ -486,35 +479,12 @@ public class Searcher {
 	public static void main(String [] args)
 	{
 		
-		Node init = initialize(4,4);
-	   // init.grid = testingGrid8();
-		
-		//init.grid = testingGrid();
-//		init.grid = testingGrid2();
+		Node init = initialize(3,3);
+	    init.grid = testingGrid6();
 		init.grid.showGrid();
-		
-		
-		
-//		System.out.println(init.grid.numberOfPads);
-//		System.out.println(init.grid.r2d2Orientation);
-//		System.out.println(init.grid.r2d2);
-		
-//		
 
-		
-//		testingGrid().showGrid();
-//		System.out.println(testingGrid().r2d2Orientation);
-		
-	  // search(init, "BFS",false).grid.showGrid();
-		
 		getSolution(init, "BFS", false);
 		
-//		init.grid.showGrid();
-//		System.out.println(init.grid.r2d2Orientation);
-//		
-//		System.out.println("XXXXXXXXXXXXXX");
-//		
-//		operate(init, "F").grid.showGrid();;
 		
 		
 		
