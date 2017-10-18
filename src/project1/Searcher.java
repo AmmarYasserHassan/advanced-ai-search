@@ -42,15 +42,19 @@ public class Searcher {
 		
 			Node currentNode = queue.deque();
 			
-//			System.out.println();
-//			System.out.println("-----------------------------------------------------" + iterations );
-//			System.out.println();
-//			currentNode.grid.showGrid();
-//			System.out.println(currentNode.grid.r2d2Orientation);
-//			System.out.println(currentNode.actionTakenFromParentToReachThisNode);
-//			System.out.println();
-//			System.out.println("-----------------------------------------------------" );
-//			System.out.println();
+			if(visualize)
+			{
+			System.out.println();
+			System.out.println("-----------------------------------------------------" + nodesExpanded );
+			System.out.println();
+			currentNode.grid.showGrid();
+			System.out.println("Action taken from parent: " + currentNode.actionTakenFromParentToReachThisNode);
+			System.out.println("h(n): " +currentNode.estimatedCostFromThisNodeToTheGoal);
+			System.out.println("g(n): " +currentNode.costToReachThisNode);
+			System.out.println();
+			System.out.println("-----------------------------------------------------" );
+			System.out.println();
+			}
 			
 			 
 			if(isGoal(currentNode))
@@ -222,30 +226,41 @@ public class Searcher {
 		return Math.abs(c1.i-c2.i) + Math.abs(c1.j-c2.j);
 	}
 	
-	// TODO calculate the heurristic value
 	public static int estimatedCostFromANodeToTheGoal(Node node)
 	{
 		
-		return h1(node);
-//		switch(heuristicFunction)
-//		{
-//		case 1: return h1(node);
-////		case 2: return h2(node);
-////		case 3: return h3(node);
-//   	case 4: return h4(node);
-//		}
+		//return h1(node);
+		//
+		return h2(node);
+
 	}
 	
-	//TODO nearest roc
-	//Distance from r2d2 to A rock
+
+	//Go to a random rock with no pad first
 	public static int h1(Node n)
-	{
-	  Cell 	rockCell = getRockNotOnPadCell(n);
+	{ 
+		if(isGoal(n))
+			return 0;
+		
+	  Cell rockCell = getRockNotOnPadCell(n);
 	  Cell r2d2Cell = n.grid.r2d2;
 	  if(rockCell == null)
 		  return 1;
 	  else
-		  return manhtanDistance(rockCell, rockCell);
+		  return manhtanDistance(rockCell, r2d2Cell);
+	}
+	
+	//Go to nearest rock first
+	public static int h2(Node n)
+	{   
+		if(isGoal(n))
+		 return 0;
+		
+		Cell rockCell = getFartherRockNotOnPadCell(n);
+		 if(rockCell == null)
+			  return 1;
+		 
+		return manhtanDistance(n.grid.r2d2,rockCell);
 	}
 	
 	public static Cell getRockNotOnPadCell(Node n)
@@ -261,6 +276,29 @@ public class Searcher {
 		}
 		
 		return null;
+	}
+	
+	public static Cell getFartherRockNotOnPadCell(Node n)
+	{
+		Grid g = n.grid;
+		int max = 0;
+		int temp = 0;
+		Cell tempCell = null;
+		for (int i = 0; i < g.length; i++) {
+			for (int j = 0; j < g.width; j++) {
+			if(g.grid[i][j].elements.contains("Rock") && !g.grid[i][j].elements.contains("Pad"))
+			{
+				temp = manhtanDistance(g.grid[i][j],n.grid.r2d2);
+				if(temp>=max)
+				{
+					max = temp;
+					tempCell = g.grid[i][j];
+				}
+			}
+			}
+		}
+		
+		return tempCell;
 	}
 	
 	public static Node depthLimitedSearch(Node initialState,int limit)
@@ -443,7 +481,7 @@ public class Searcher {
        grid.grid=g;
        grid.r2d2Orientation = "West";
        grid.r2d2 = g[0][1];
-       
+       grid.numberOfPadsRemaningWithoutRocks = 1;
        
         
         return grid;
@@ -913,7 +951,7 @@ public class Searcher {
         g[5][4] = new Cell(5,4);
         g[5][5] = new Cell(5,5);
         g[5][6] = new Cell(5,6);
-        g[5][7] = new Cell(5,7);
+        g[5][7] = new Cell(5,7,"R2D2");
         g[5][8] = new Cell(5,8);
         g[5][9] = new Cell(5,9);
         
@@ -954,7 +992,7 @@ public class Searcher {
         
         g[9][0] = new Cell(9,0);
         g[9][1] = new Cell(9,1);
-        g[9][2] = new Cell(9,2,"R2D2");
+        g[9][2] = new Cell(9,2);
         g[9][3] = new Cell(9,3,"Teleportal");
         g[9][4] = new Cell(9,4);
         g[9][5] = new Cell(9,5);
@@ -969,7 +1007,7 @@ public class Searcher {
        Grid grid = new Grid(10,10);
        grid.grid=g;
        grid.r2d2Orientation = "South";
-       grid.r2d2 = g[9][2];
+       grid.r2d2 = g[5][6];
        grid.numberOfPadsRemaningWithoutRocks =1;
        
        
@@ -979,13 +1017,17 @@ public class Searcher {
 	public static void main(String [] args){
 
 		Node init = initialize(10,10);
-		init.grid = testingGrid10by102();
+		//Node init = initialize(5,5);
+		init.grid = testingGrid10by10();
+		//init.grid = testingGrid10by102();
+		//init.grid = testingGrid11();
+		
 		init.grid.showGrid();
 		
-		
+		//System.out.println(h2(init));
 	     
-       getSolution(init, "BFS", false);
-//	   getSolution(init, "UCS", false);
+       getSolution(init, "ASS", false);
+  // getSolution(init, "UCS", false);
 		
 //		Node goal = iterativeDeepening(init);
 //		Node goal = depthLimitedSearch(init, 13);
