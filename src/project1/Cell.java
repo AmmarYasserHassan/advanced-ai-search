@@ -11,8 +11,6 @@ public class Cell
 	int i;
 	int j;
 	
-	//TODO type and element that may be null
-	
 	public Cell(int i, int j) {
 		this.elements = new ArrayList<String>();
 		this.i = i;
@@ -28,39 +26,16 @@ public class Cell
 	
 	
 	
-	//TODO remove throw
-	public void addElement(String elm)
+		public void addElement(String elm)
 	{
 		
-//		this.elements.add(elm);
-		try {
-			if (!(this.elements.contains(elm)))
-				this.elements.add(elm);
-			else {
-				String s = this.toString();
-				throw new Exception("Added a duplicate element at: " + s);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.elements.add(elm);
 	}
 	
 	
 	public void removeElement(String elm)
 	{ 
-//		this.elements.remove(elm);
-
-
-		try {
-			if (this.elements.contains(elm))
-				this.elements.remove(elm);
-			else {
-				String s = this.toString();
-				throw new Exception("Removed a non-existing element at: " + s);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.elements.remove(elm);
 	}
 
 	
@@ -102,9 +77,7 @@ public class Cell
 		
 	}
 	
-	@Override
 	public String toString() {
-//		return  this.i + "," + this.j + " - " + elements;
 		return ""+elements;
 	}
     	
