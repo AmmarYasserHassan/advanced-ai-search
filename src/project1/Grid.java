@@ -308,7 +308,7 @@ public class Grid {
 				padsCount++;
 		}
 
-		if (rocksCount != padsCount) {
+		if (rocksCount > padsCount) {
 			System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 			return true;
 		}
@@ -323,7 +323,7 @@ public class Grid {
 				padsCount++;
 		}
 
-		if (rocksCount != padsCount) {
+		if (rocksCount > padsCount) {
 			System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 			return true;
 		}
@@ -338,7 +338,7 @@ public class Grid {
 				padsCount++;
 		}
 
-		if (rocksCount != padsCount) {
+		if (rocksCount > padsCount) {
 			System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 			return true;
 		}
@@ -354,7 +354,7 @@ public class Grid {
 				padsCount++;
 		}
 
-		if (rocksCount != padsCount) {
+		if (rocksCount > padsCount) {
 			System.out.println("Rock at an edge with no pad infront of it, infeasible Solution");
 			return true;
 		}

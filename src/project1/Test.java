@@ -45,7 +45,6 @@ public class Test {
 		grid.r2d2 = g[1][2];
 		grid.numberOfPadsRemaningWithoutRocks = 1;
 
-
 		return grid;
 	}
 
@@ -172,37 +171,6 @@ public class Test {
 		return grid;
 	}
 
-	public static Grid testingGrid8() {
-		Cell[][] g = new Cell[4][4];
-		g[0][0] = new Cell(0, 0);
-		g[0][1] = new Cell(0, 1);
-		g[0][2] = new Cell(0, 2, "Rock");
-		g[0][3] = new Cell(0, 3, "Immovable");
-
-		g[1][0] = new Cell(1, 0, "R2D2");
-		g[1][1] = new Cell(1, 1);
-		g[1][2] = new Cell(1, 2, "Immovable");
-		g[1][3] = new Cell(1, 3);
-
-		g[2][0] = new Cell(2, 0);
-		g[2][1] = new Cell(2, 1);
-		g[2][2] = new Cell(2, 2);
-		g[2][3] = new Cell(2, 3);
-
-		g[3][0] = new Cell(3, 0);
-		g[3][1] = new Cell(3, 1);
-		g[3][2] = new Cell(3, 2, "Pad");
-		g[3][3] = new Cell(3, 3, "Teleportal");
-
-		Grid grid = new Grid(4, 4);
-		grid.grid = g;
-		grid.r2d2Orientation = "East";
-		grid.r2d2 = g[1][0];
-		grid.numberOfPadsRemaningWithoutRocks = 1;
-
-
-		return grid;
-	}
 
 	public static Grid testingGrid10() {
 		Cell[][] g = new Cell[5][5];
@@ -592,5 +560,137 @@ public class Test {
 		grid.numberOfPadsRemaningWithoutRocks = 1;
 
 		return grid;
+	}
+
+	public static void main(String[] args) {
+		
+		HelpR2D2 searcher = new HelpR2D2();
+		
+		// uncomment if you do want to allow repeated states
+		//searcher.setEliminateRepeatedStates(false);
+		
+		// uncomment if you want to use h1, h2 is used by default
+		//searcher.setUseFirstHeuristic(true);
+		
+		// search strategies' names
+		/*
+		 * BFS
+		 * DFS
+		 * IDS
+		 * UCS
+		 * GRS
+		 * ASS
+		 * 
+		 */
+		
+
+		// -------------------------------
+		// TESTING WITH 3X3
+		// -------------------------------
+	
+		// Example 1
+		//Node initialState = searcher.genGrid(3, 3);
+//		initialState.grid = testingGrid();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", true);
+		
+		// Example 2
+		//Node initialState = searcher.genGrid(3, 3);
+//		initialState.grid = testingGrid1();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		// Example 3
+		//Node initialState = searcher.genGrid(3, 3);
+//		initialState.grid = testingGrid3();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		// Example 4
+		//Node initialState = searcher.genGrid(3, 3);
+//		initialState.grid = testingGrid4();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		// Example 5 **
+//		Node initialState = searcher.genGrid(3, 3);
+//		initialState.grid = testingGrid5();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		
+		// Example 6 *
+//		Node initialState = searcher.genGrid(3, 3);
+//		initialState.grid = testingGrid6();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		// Example 7
+//		Node initialState = searcher.genGrid(3, 3);
+//		initialState.grid = testingGrid9();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		
+		
+		// -------------------------------
+		// TESTING WITH 4X4
+		// -------------------------------
+		
+			
+//		 Example 8 ***
+//		Node initialState = searcher.genGrid(4, 4);	
+//		initialState.grid = testingGrid2();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		
+		// -------------------------------
+		// TESTING WITH 5X5
+		// -------------------------------
+			
+//		 Example 9
+//		Node initialState = searcher.genGrid(5, 5);	
+//		initialState.grid = testingGrid10();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		// Example 10
+//		Node initialState = searcher.genGrid(5, 5);	
+//		initialState.grid = testingGrid11();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		// Example 11 ****
+//		Node initialState = searcher.genGrid(5, 5);	
+//		initialState.grid = testingGrid12();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "GRS", false);
+		
+		
+		// -------------------------------
+		// TESTING WITH 10X10
+		// -------------------------------
+
+		//Example 12 ***
+//		Node initialState = searcher.genGrid(10, 10);	
+//		initialState.grid = testingGrid10by102();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		
+		//Example 13, this is the hardest it will take some time ******
+//		Node initialState = searcher.genGrid(10, 10);	
+//		initialState.grid = testingGrid10by10();
+//		initialState.grid.showGrid();
+//		searcher.getSolution(initialState, "BFS", false);
+		
+		// -------------------------------
+		// TESTING A Random grid, change width and length as you like
+		// -------------------------------
+		
+		//Node initialState = searcher.genGrid(3, 3);
+		//searcher.getSolution(initialState, "BFS", false);
+		
 	}
 }

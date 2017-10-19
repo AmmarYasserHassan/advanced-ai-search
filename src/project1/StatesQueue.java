@@ -30,7 +30,6 @@ public class StatesQueue
 		case "Initial State": this.states.add(n); break;
 		case "BFS" : this.states.add(n); break;
 		case "DFS" : this.states.add(0,n); break;
-		case "IDS" : this.states.add(0,n); break;
 		case "UCS" : this.states.add(n);
 		
 		Collections.sort(this.states, new Comparator<Node>() {
