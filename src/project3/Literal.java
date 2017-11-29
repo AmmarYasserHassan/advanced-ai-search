@@ -38,11 +38,20 @@ public class Literal {
 		
 		vars.add("X");
 		vars.add("Y");
-		vars.add("h(f(a))");
 		
 		Literal l = new Literal("p",vars);
 		
+		ArrayList<String> vars2 = new ArrayList<String>();
+		vars2.add("a");
+		Literal l2 = new Literal("f",vars2);
+		
+		ArrayList<String> vars3 = new ArrayList<String>();
+		vars3.add(l2.toString());
+		Literal l3 = new Literal("h",vars3);
+		
 		System.out.println(l.toString());
+		System.out.println(l2.toString());
+		System.out.println(l3.toString());
 	}
 	
 }
