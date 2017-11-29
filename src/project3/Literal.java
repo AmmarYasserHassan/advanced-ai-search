@@ -74,6 +74,30 @@ public class Literal {
 	}
 
 	
+	public String applySubtituion(String sigma)
+	{
+		String sub = "";
+		String var = "";
+		boolean addSub = true;
+		
+		for (int i = 0; i < sigma.length(); i++) {
+			if(sigma.charAt(i)=='/')
+				addSub = false;
+			
+			if(addSub)
+			sub+=sigma.charAt(i);
+			else
+			var+=sigma.charAt(i);
+				
+		}
+		
+		var = var.substring(1);
+		
+		return this.toString().replace(var,sub);
+		
+		
+	}
+	
 	public static void main(String[] args){
 		ArrayList<String> vars = new ArrayList<String>();
 		
@@ -81,8 +105,10 @@ public class Literal {
 		vars.add("Y");
 		
 		Literal l = new Literal("g",vars);
+		System.out.println(l.toString());
+	    System.out.println(l.applySubtituion("f(a)/X"));
+	    System.out.println(l.applySubtituion("b/Y"));
 		
-	
 		ArrayList<String> vars2 = new ArrayList<String>();
 		vars2.add("a");
 		Literal l2 = new Literal("f",vars2);
@@ -101,9 +127,9 @@ public class Literal {
 //		System.out.println(l3.toString());
 //		System.out.println(l3.convertToListNotation());
 //		
-//		System.out.println(l2.toString());
-		System.out.println(l4.toString());
-		l4.convertToListNotation();
+////		System.out.println(l2.toString());
+//		System.out.println(l4.toString());
+//		l4.convertToListNotation();
 
 		
 		
