@@ -31,6 +31,17 @@ public class Literal {
 		}
 		return name + "("+vars;
 	}
+	
+	public String convertToListNotation() {
+		
+		String conventional = this.toString();
+		String list = conventional.replace(","," ");
+		String prefix = "("+this.name+" ";
+		String suffix = list.substring(2, list.length());
+		return prefix+suffix;
+		
+		
+	}
 
 	
 	public static void main(String[] args){
@@ -40,18 +51,23 @@ public class Literal {
 		vars.add("Y");
 		
 		Literal l = new Literal("p",vars);
+		System.out.println(l.toString());
+		System.out.println(l.convertToListNotation());
 		
+	
 		ArrayList<String> vars2 = new ArrayList<String>();
 		vars2.add("a");
 		Literal l2 = new Literal("f",vars2);
 		
 		ArrayList<String> vars3 = new ArrayList<String>();
-		vars3.add(l2.toString());
+		vars3.add(l2.convertToListNotation());
 		Literal l3 = new Literal("h",vars3);
 		
-		System.out.println(l.toString());
-		System.out.println(l2.toString());
 		System.out.println(l3.toString());
+		System.out.println(l3.convertToListNotation());
+
+		
+		
 	}
 	
 }
