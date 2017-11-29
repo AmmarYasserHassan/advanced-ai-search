@@ -1,5 +1,7 @@
 package project1;
 
+import java.util.ArrayList;
+
 public class Grid {
 
 	Cell[][] grid;
@@ -221,7 +223,7 @@ public class Grid {
 	public Cell getNextCell(Cell cell, String orientation) {
 		if (facingAnEdge(cell, orientation)) {
 			// we should never be here
-			System.err.println("Ahmed Wageeh says: trying to get next cell while facing edge");
+		//	System.err.println("Ahmed Wageeh says: trying to get next cell while facing edge");
 			// Return same cell cause forward should make you stuck there
 			return cell;
 		}
@@ -362,6 +364,66 @@ public class Grid {
 		return false;
 
 	}
+	
+	public ArrayList<String> createKB() {
+		int k = 1;
+		int rocksCount =1;
+		ArrayList<String> sentences = new ArrayList<String>();
+		for (int i = 0; i < this.length; i++) {
+			for (int j = 0; j < this.width; j++) {
+				grid[i][j].indexInKb = k;
+				for (String object : grid[i][j].elements) {
+					
+					if(object.equals("Rock"))
+					{
+						sentences.add("at(c"+k+","+object.toLowerCase()+rocksCount+",s0).");
+						sentences.add("rock("+object.toLowerCase()+rocksCount+").");
+						rocksCount++;
+					}
+					else{
+					
+					if(object.equals("R2D2"))
+					{
+						sentences.add("at(c"+k+","+object.toLowerCase()+",s0).");
+					}
+					else
+					{
+						sentences.add("at(c"+k+","+object.toLowerCase()+",_).");
+					}
+					}
+						
+				}
+				
+				
+				
+				k++;
+			}
+
+		}
+		
+		sentences.add("orientation("+this.r2d2Orientation.toLowerCase()+",s0).");
+		sentences.add("obstacle(immovable).");
+		sentences.add("pad(pad).");
+		sentences.add("teleportal(teleportal).");
+		
+		for (int i = 0; i < this.length; i++) {
+			for (int j = 0; j < this.width; j++) {
+				for(String orin:locations)
+				{
+					Cell temp = this.getNextCell(grid[i][j], orin);
+					if(temp.indexInKb != grid[i][j].indexInKb)
+					{
+						sentences.add("next(c"+grid[i][j].indexInKb+",c"+temp.indexInKb+","+orin.toLowerCase()+").");
+					}
+				}
+			}
+
+		}
+		
+		
+		return sentences;
+	}
+	
 
 	public String getGridHash() {
 		String hash = "";

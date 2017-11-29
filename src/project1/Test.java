@@ -1,5 +1,7 @@
 package project1;
 
+import java.io.PrintWriter;
+
 public class Test {
 
 	public static Grid testingGrid() {
@@ -172,6 +174,59 @@ public class Test {
 	}
 
 
+	public static Grid testingGridKB1(){
+		
+		Cell[][] g = new Cell[3][3];
+		g[0][0] = new Cell(0, 0,"R2D2");
+		g[0][1] = new Cell(0, 1, "Rock");
+		g[0][2] = new Cell(0, 2, "Pad");
+
+		g[1][0] = new Cell(1, 0);
+		g[1][1] = new Cell(1, 1, "Rock");
+		g[1][1].addElement("Teleportal");
+		g[1][2] = new Cell(1, 2, "Pad");
+
+		g[2][0] = new Cell(2, 0);
+		g[2][1] = new Cell(2, 1);
+		g[2][2] = new Cell(2, 2);
+
+		Grid grid = new Grid(3, 3);
+		grid.grid = g;
+		grid.r2d2Orientation = "East";
+		grid.r2d2 = g[0][0];
+		grid.numberOfPadsRemaningWithoutRocks = 1;
+
+		return grid;
+		
+	}
+	
+	
+
+	public static Grid testingGridKB2(){
+		
+		Cell[][] g = new Cell[3][3];
+		g[0][0] = new Cell(0, 0,"Immovable");
+		g[0][1] = new Cell(0, 1);
+		g[0][2] = new Cell(0, 2);
+
+		g[1][0] = new Cell(1, 0,"R2D2");
+		g[1][1] = new Cell(1, 1, "Rock");
+		g[1][2] = new Cell(1, 2, "Pad");
+
+		g[2][0] = new Cell(2, 0);
+		g[2][1] = new Cell(2, 1);
+		g[2][2] = new Cell(2, 2,"Teleportal");
+
+		Grid grid = new Grid(3, 3);
+		grid.grid = g;
+		grid.r2d2Orientation = "East";
+		grid.r2d2 = g[1][0];
+		grid.numberOfPadsRemaningWithoutRocks = 1;
+
+		return grid;
+		
+	}
+	
 	public static Grid testingGrid10() {
 		Cell[][] g = new Cell[5][5];
 		g[0][0] = new Cell(0, 0);
@@ -561,10 +616,60 @@ public class Test {
 
 		return grid;
 	}
+	
+	
+	
 
 	public static void main(String[] args) {
 		
+		
+		// Project 2 start
+		
 		HelpR2D2 searcher = new HelpR2D2();
+		
+		Node initialState = searcher.genGrid(3, 3);
+		initialState.grid = testingGridKB1();
+		initialState.grid.showGrid();
+		
+		PrintWriter out = null;
+		
+		try{
+			 out = new PrintWriter( "kb1.pl" );
+			 for(int i =0; i<initialState.grid.createKB().size();i++)
+				 out.println( initialState.grid.createKB().get(i) );
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+				out.close();
+		}
+		
+		Node initialState1 = searcher.genGrid(3, 3);
+		initialState1.grid = testingGridKB2();
+		initialState1.grid.showGrid();
+		
+		
+		try{
+			 out = new PrintWriter( "kb2.pl" );
+			 for(int i =0; i<initialState1.grid.createKB().size();i++)
+				 out.println( initialState1.grid.createKB().get(i) );
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+				out.close();
+		}
+		
+//		
+		 
+			
+			
+			
+	   // Rest is project 1
+			
+			
 		
 		// uncomment if you do want to allow repeated states
 		//searcher.setEliminateRepeatedStates(false);
@@ -589,9 +694,11 @@ public class Test {
 		// -------------------------------
 	
 		// Example 1
-		//Node initialState = searcher.genGrid(3, 3);
+//		Node initialState = searcher.genGrid(3, 3);
 //		initialState.grid = testingGrid();
 //		initialState.grid.showGrid();
+//	    for(int i =0; i<initialState.grid.createKB().size();i++)
+//		System.out.println(initialState.grid.createKB().get(i));
 //		searcher.getSolution(initialState, "BFS", true);
 		
 		// Example 2
@@ -683,6 +790,8 @@ public class Test {
 //		Node initialState = searcher.genGrid(10, 10);	
 //		initialState.grid = testingGrid10by10();
 //		initialState.grid.showGrid();
+//		 for(int i =0; i<initialState.grid.createKB().size();i++)
+//				System.out.println(initialState.grid.createKB().get(i));
 //		searcher.getSolution(initialState, "BFS", false);
 		
 		// -------------------------------
@@ -691,6 +800,8 @@ public class Test {
 		
 		//Node initialState = searcher.genGrid(3, 3);
 		//searcher.getSolution(initialState, "BFS", false);
+		
+
 		
 	}
 }

@@ -10,6 +10,7 @@ public class Cell
 	ArrayList<String> elements;
 	int i;
 	int j;
+	int indexInKb;
 	
 	public Cell(int i, int j) {
 		this.elements = new ArrayList<String>();
