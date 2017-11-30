@@ -45,6 +45,21 @@ public class Literal {
 		return name + "("+vars;
 	}
 	
+	
+	public boolean occurs(String varToCompare)
+	{
+		for(Literal l: this.arity)
+		{
+			if(l.isVariable)
+			{
+				if(l.name.equals(varToCompare))
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public String convertToListNotation() {
 		
 		String name = this.getNameOfPredicate(this.toString());
@@ -111,7 +126,7 @@ public class Literal {
 	}
 	
 	public static void main(String[] args){
-		ArrayList<Literal> vars = new ArrayList<Literal>();
+		
 		
 		Literal varX = new Literal("X",false,true,false);
 		Literal varY = new Literal("Y",false,true,false);
@@ -121,6 +136,7 @@ public class Literal {
 		Literal consB = new Literal("b",true,false,false);
 		Literal consC = new Literal("c",true,false,false);
 		
+		ArrayList<Literal> vars = new ArrayList<Literal>();
 		vars.add(varX);
 		vars.add(varY);
 		
@@ -146,17 +162,12 @@ public class Literal {
 		System.out.println(l4.toString());
 
 //		System.out.println(l3.toString());
-//		System.out.println(l3.convertToListNotation());
+		System.out.println(l3.convertToListNotation());
 //		
 ////		System.out.println(l2.toString());
 //		System.out.println(l4.toString());
 //	    System.out.println(l4.applySubtituion("h2(l)/X"));
 
-//		System.out.println(l4.convertToListNotation());
-//		String [] arguments = l4.convertToListNotation().split(" ");
-//		
-//		for(String str: arguments)
-//			System.out.println(str);
 
 		
 		

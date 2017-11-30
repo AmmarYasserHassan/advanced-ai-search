@@ -5,88 +5,42 @@ import java.util.ArrayList;
 public class Unifier {
 	
 	public static void main(String [] args){
-//		String test = "p(X,Y)";
-//		System.out.println(isConstant(test));
-//		System.out.println(isVariable(test));
-//		System.out.println(isPredicate(test));
 		
-		ArrayList<String> vars = new ArrayList<String>();
+		Literal varX = new Literal("X",false,true,false);
+		Literal varY = new Literal("Y",false,true,false);
+		Literal varZ = new Literal("Z",false,true,false);
 		
-		vars.add("X");
-		vars.add("Y");
+		Literal consA = new Literal("a",true,false,false);
+		Literal consB = new Literal("b",true,false,false);
+		Literal consC = new Literal("c",true,false,false);
+		
+		ArrayList<Literal> vars = new ArrayList<Literal>();
+		vars.add(varX);
+		vars.add(varY);
 		
 		Literal l = new Literal("g",vars);
 		
-//		ArrayList<String> vars2 = new ArrayList<String>();
-//		vars2.add("a");
-//		vars2.add("b");
-//		vars2.add("c");
-//		Literal l2 = new Literal("f",vars2);
-		Literal l2 = new Literal("Z",true,false,false);
+		ArrayList<Literal> vars2 = new ArrayList<Literal>();
+		vars2.add(consA);
+		Literal l2 = new Literal("f",vars2);
 		
-		ArrayList<String> vars3 = new ArrayList<String>();
-		vars3.add("a");
-		vars3.add("a");
-		vars3.add("X");
-		Literal l3 = new Literal("f",vars3);
-//		Literal l3 = new Literal("X",true,false,false);
+		ArrayList<Literal> vars3 = new ArrayList<Literal>();
+		vars3.add(l2);
+		Literal l3 = new Literal("h",vars3);
 		
-		ArrayList<String> vars4 = new ArrayList<String>();
-		vars4.add(l.toString());
-		vars4.add(l2.toString());
+		ArrayList<Literal> vars4 = new ArrayList<Literal>();
+		vars4.add(l);
+		vars4.add(l2);
 		Literal l4 = new Literal("p",vars4);
 		
-
-//		System.out.println(l2.toString());
-//		System.out.println(l3.toString());
-//		System.out.println(unify(l3,l2));
+//		System.out.println(l);
+//		System.out.println(l2);
+//		System.out.println(l3);
+//		System.out.println(l4);
 		
-		transform("p(X)");
-		
+		System.out.println(unify(varX,l));
 	}
 	
-	
-	public static boolean unifyPredicates(String e1, String e2)
-	{
-		if(isConstant(e1) && isConstant(e2))
-			return e1.equals(e2);
-		
-		if(isConstant(e1) && isVariable(e2))
-			return true;
-		
-		if(isVariable(e1) && isConstant(e2))
-			return true;
-		
-		if(isVariable(e1) && isVariable(e2))
-			return true;
-		
-		// occurence check
-		if(isPredicate(e1) && isVariable(e2))
-			return true;
-		
-		// occurence check
-		if(isVariable(e1) && isPredicate(e2.toString()))
-			return true;
-		
-		// occurence check
-		if(isPredicate(e1) && isPredicate(e2))
-		{
-			if(getNameOfPredicate(e1).equals(getNameOfPredicate(e2)))
-			{
-				if(e1.arity.size() == e2.arity.size())
-				{
-					for(int i = 0; i<e1.arity.size();i++)
-					{
-						if(!unifyPredicates(e1.arity.get(i), e2.arity.get(i)))
-							return false;
-					}
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
 	
 	public static boolean unify(Literal e1, Literal e2)
 	{
@@ -104,14 +58,14 @@ public class Unifier {
 		
 		
 		if(isPredicate(e1.toString()) && isVariable(e2.toString()))
-		{ 
-			if(!e1.arity.contains(e2.name))
+		{    
+			if(!e1.occurs(e2.name))
 			return true;
 		}
 
 		if(isPredicate(e2.toString()) && isVariable(e1.toString()))
-		{   
-			if(!e2.arity.contains(e1.name))
+		{  
+			if(!e2.occurs(e1.name))
 			return true;
 		}
 		
@@ -123,7 +77,7 @@ public class Unifier {
 				{
 					for(int i = 0; i<e1.arity.size();i++)
 					{
-						if(!unifyPredicates(e1.arity.get(i), e2.arity.get(i)))
+						if(!unify(e1.arity.get(i), e2.arity.get(i)))
 							return false;
 					}
 					return true;
