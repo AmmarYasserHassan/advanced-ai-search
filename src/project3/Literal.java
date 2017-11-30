@@ -6,21 +6,34 @@ public class Literal {
 	
 	String name;
 	ArrayList<String> arity;
+	boolean isConstant;
+	boolean isVariable;
+	boolean isPredicate;
 	
-	public Literal(String name) {
+	public Literal(String name,boolean isConstant,boolean isVariable, boolean isPredicate) {
 		this.name = name;
 		this.arity = new ArrayList<String>();
+		this.isConstant = isConstant;
+		this.isVariable = isVariable;
+		this.isPredicate = isPredicate;
 
 	}
 	
 	public Literal(String name,ArrayList<String> vars) {
 		this.name = name;
 		this.arity = vars;
+		this.isConstant = false;
+		this.isVariable = false;
+		this.isPredicate = true;
 
 	}
 
 	@Override
 	public String toString() {
+		
+		if(this.isVariable || this.isConstant)
+			return this.name;
+		
 		String vars ="";
 		for (int i = 0; i < this.arity.size(); i++) {
 			
@@ -59,6 +72,8 @@ public class Literal {
 		return name;
 	}
 	
+
+	
 	public String convertToListNotation(String term) {
 		
 		String list = term.replace(","," ");
@@ -90,11 +105,8 @@ public class Literal {
 			var+=sigma.charAt(i);
 				
 		}
-		
 		var = var.substring(1);
-		
 		return this.toString().replace(var,sub);
-		
 		
 	}
 	
@@ -105,9 +117,9 @@ public class Literal {
 		vars.add("Y");
 		
 		Literal l = new Literal("g",vars);
-		System.out.println(l.toString());
-	    System.out.println(l.applySubtituion("f(a)/X"));
-	    System.out.println(l.applySubtituion("b/Y"));
+//		System.out.println(l.toString());
+//	    System.out.println(l.applySubtituion("f(a)/X"));
+//	    System.out.println(l.applySubtituion("b/Y"));
 		
 		ArrayList<String> vars2 = new ArrayList<String>();
 		vars2.add("a");
@@ -128,7 +140,9 @@ public class Literal {
 //		System.out.println(l3.convertToListNotation());
 //		
 ////		System.out.println(l2.toString());
-//		System.out.println(l4.toString());
+		System.out.println(l4.toString());
+	    System.out.println(l4.applySubtituion("h2(l)/X"));
+
 //		l4.convertToListNotation();
 
 		
