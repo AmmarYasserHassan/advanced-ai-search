@@ -18,14 +18,14 @@ public class Unifier {
 		
 		ArrayList<Literal> vars = new ArrayList<Literal>();
 		vars.add(varX);
-		vars.add(varY);
+//		vars.add(varY);
 		
 		Literal l = new Literal("g",vars);
 		
 		ArrayList<Literal> vars2 = new ArrayList<Literal>();
 		//vars2.add(consA);
 		vars2.add(varX);
-		Literal l2 = new Literal("f",vars2);
+//		Literal l2 = new Literal("f",vars2);
 		
 		ArrayList<Literal> vars5 = new ArrayList<Literal>();
 		vars5.add(consA);
@@ -39,21 +39,29 @@ public class Unifier {
 		Literal f2 = new Literal("f1",vars6);
 		
 		ArrayList<Literal> vars3 = new ArrayList<Literal>();
-//		vars3.add(varY);
-		vars3.add(l2);
+		vars3.add(varX);
+//		vars3.add(l2);
 		Literal l3 = new Literal("g",vars3);
 		
+		
 		ArrayList<Literal> vars7 = new ArrayList<Literal>();
-		vars7.add(varZ);
-		vars7.add(varY);
+		vars7.add(l);
+//		vars7.add(varY);
 		vars7.add(varX);
-		Literal h_x = new Literal("p",vars7);
+		Literal h_x = new Literal("f",vars7);
+		
+		ArrayList<Literal> vars8 = new ArrayList<Literal>();
+		vars8.add(varY);
+		vars8.add(consA);
+		Literal f_y = new Literal("f",vars8);
 		
 		ArrayList<Literal> vars4 = new ArrayList<Literal>();
 		vars4.add(l);
 		vars4.add(l3);
 		vars4.add(f2);
 		Literal l4 = new Literal("p",vars4);
+		
+		
 		
 //		System.out.println(l);
 //		System.out.println(l2);
@@ -62,19 +70,13 @@ public class Unifier {
 		
 		
 		ArrayList<String> subs = new ArrayList<String>();
+
 		System.out.println(h_x);
-		System.out.println(l4);
-		System.out.println(unify(l4,h_x,subs));
+		System.out.println(f_y);
+
+		System.out.println(unify(h_x,f_y,subs));
 		getSigma(subs);
 		System.out.println(subs);
-		
-//		System.out.println(l3);
-//		System.out.println(l);
-//		System.out.println(unify(l3, l, subs));
-//		System.out.println(subs);
-//		getSigma(subs);
-//		System.out.println(subs);
-		
 
 //		
 	}
@@ -101,7 +103,6 @@ public class Unifier {
 			
 			if(isVariable(sub))
 			{
-				System.out.println("h1");
 				subs.add(sub+"/"+oldSub);
 				return true;
 			}
@@ -114,17 +115,16 @@ public class Unifier {
 			if(isConstant(sub))
 				return false;
 			
-			//TODO
-			if(isPredicate(sub))
-			{
-				System.out.println("heereeeeeeee");
-				System.out.println(sub);
-				System.out.println(oldSub);
-			}
+//			//TODO
+//			if(isPredicate(sub))
+//			{
+//				System.out.println("heereeeeeeee");
+//				System.out.println(sub);
+//				System.out.println(oldSub);
+//			}
 			
 			if(isVariable(sub))
 			{
-				System.out.println("h2");
 				subs.add(sub+"/"+oldSub);
 				return true;
 			}
@@ -134,7 +134,6 @@ public class Unifier {
 		{   
 			if(!isVariable(sub))
 			{
-			System.out.println("h3");
 			subs.remove(oldSub+"/"+var);
 			subs.add(sub+"/"+var);
 			subs.add(sub+"/"+oldSub);
@@ -142,7 +141,6 @@ public class Unifier {
 			}
 			else
 			{		
-				System.out.println("h4");
 				subs.add(sub+"/"+var);
 				subs.add(sub+"/"+oldSub);
 				return true;
@@ -150,7 +148,6 @@ public class Unifier {
 		}
 		}
 		
-		System.out.println("h5");
 		
 		subs.add(sub+"/"+var);
 		return true;
