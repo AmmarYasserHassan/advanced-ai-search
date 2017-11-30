@@ -27,7 +27,7 @@ public class Unifier {
 		ArrayList<String> vars3 = new ArrayList<String>();
 		vars3.add("a");
 		vars3.add("a");
-		vars3.add("Z");
+		vars3.add("X");
 		Literal l3 = new Literal("f",vars3);
 //		Literal l3 = new Literal("X",true,false,false);
 		
@@ -37,9 +37,11 @@ public class Unifier {
 		Literal l4 = new Literal("p",vars4);
 		
 
-		System.out.println(l2.toString());
-		System.out.println(l3.toString());
-		System.out.println(unify(l2,l3));
+//		System.out.println(l2.toString());
+//		System.out.println(l3.toString());
+//		System.out.println(unify(l3,l2));
+		
+		transform("p(X)");
 		
 	}
 	
@@ -68,7 +70,20 @@ public class Unifier {
 		
 		// occurence check
 		if(isPredicate(e1) && isPredicate(e2))
+		{
+			if(getNameOfPredicate(e1).equals(getNameOfPredicate(e2)))
+			{
+				if(e1.arity.size() == e2.arity.size())
+				{
+					for(int i = 0; i<e1.arity.size();i++)
+					{
+						if(!unifyPredicates(e1.arity.get(i), e2.arity.get(i)))
+							return false;
+					}
 					return true;
+				}
+			}
+		}
 		
 		return false;
 	}
@@ -89,7 +104,7 @@ public class Unifier {
 		
 		
 		if(isPredicate(e1.toString()) && isVariable(e2.toString()))
-		{  
+		{ 
 			if(!e1.arity.contains(e2.name))
 			return true;
 		}
@@ -100,32 +115,42 @@ public class Unifier {
 			return true;
 		}
 		
-//		// occurence check
-//		if(isPredicate(e1.toString()) && isPredicate(e2.toString()))
-//		{
-//			if(e1.name.equals(e2.name))
-//			{
-//				if(e1.arity.size() == e2.arity.size())
-//				{
-//					for(int i = 0; i<e1.arity.size();i++)
-//					{
-//						if(!unifyPredicates(e1.arity.get(i), e2.arity.get(i)))
-//							return false;
-//					}
-//					return true;
-//				}
-//			}
-//		}
+		if(isPredicate(e1.toString()) && isPredicate(e2.toString()))
+		{
+			if(e1.name.equals(e2.name))
+			{
+				if(e1.arity.size() == e2.arity.size())
+				{
+					for(int i = 0; i<e1.arity.size();i++)
+					{
+						if(!unifyPredicates(e1.arity.get(i), e2.arity.get(i)))
+							return false;
+					}
+					return true;
+				}
+			}
+		}
 		
 		return false;
 	}
 
+	public static String getNameOfPredicate(String folTerm)
+	{
+		String name = "";
+		
+		for (int i = 0; i < folTerm.length(); i++) {
+			if(folTerm.charAt(i)=='(')
+				break;
+			name+=folTerm.charAt(i);
+		}
+		return name;
+	}
+	
 	public static boolean isConstant(String statement)
 	{
 		if(!statement.contains("("))
 			if(Character.isLowerCase(statement.charAt(0)))
 				return true;
-		
 		return false;
 	}
 	
@@ -134,7 +159,6 @@ public class Unifier {
 		if(!statement.contains("("))
 			if(!Character.isLowerCase(statement.charAt(0)))
 				return true;
-		
 		return false;
 	}
 	
@@ -142,7 +166,12 @@ public class Unifier {
 	{
 		if(statement.contains("("))
 			return true;
-		
 		return false;
+	}
+	
+	public static void getNestedPredicate(String s)
+	{
+		System.out.println(s.lastIndexOf("("));
+		System.out.println(s.indexOf(")"));
 	}
 }

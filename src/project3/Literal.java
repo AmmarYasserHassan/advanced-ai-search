@@ -5,21 +5,21 @@ import java.util.ArrayList;
 public class Literal {
 	
 	String name;
-	ArrayList<String> arity;
+	ArrayList<Literal> arity;
 	boolean isConstant;
 	boolean isVariable;
 	boolean isPredicate;
 	
 	public Literal(String name,boolean isConstant,boolean isVariable, boolean isPredicate) {
 		this.name = name;
-		this.arity = new ArrayList<String>();
+		this.arity = new ArrayList<Literal>();
 		this.isConstant = isConstant;
 		this.isVariable = isVariable;
 		this.isPredicate = isPredicate;
 
 	}
 	
-	public Literal(String name,ArrayList<String> vars) {
+	public Literal(String name,ArrayList<Literal> vars) {
 		this.name = name;
 		this.arity = vars;
 		this.isConstant = false;
@@ -45,7 +45,7 @@ public class Literal {
 		return name + "("+vars;
 	}
 	
-	public void convertToListNotation() {
+	public String convertToListNotation() {
 		
 		String name = this.getNameOfPredicate(this.toString());
 		String vars = "";
@@ -57,7 +57,7 @@ public class Literal {
 			vars+= this.convertToListNotation(this.arity.get(i).toString())+ " ";	
 		}
 		
-		System.out.println("("+ name + " " + vars + ")");
+		return "("+ name + " " + vars + ")";
 	}
 	
 	public String getNameOfPredicate(String folTerm)
@@ -111,39 +111,52 @@ public class Literal {
 	}
 	
 	public static void main(String[] args){
-		ArrayList<String> vars = new ArrayList<String>();
+		ArrayList<Literal> vars = new ArrayList<Literal>();
 		
-		vars.add("X");
-		vars.add("Y");
+		Literal varX = new Literal("X",false,true,false);
+		Literal varY = new Literal("Y",false,true,false);
+		Literal varZ = new Literal("Z",false,true,false);
+		
+		Literal consA = new Literal("a",true,false,false);
+		Literal consB = new Literal("b",true,false,false);
+		Literal consC = new Literal("c",true,false,false);
+		
+		vars.add(varX);
+		vars.add(varY);
 		
 		Literal l = new Literal("g",vars);
-//		System.out.println(l.toString());
+		System.out.println(l.toString());
 //	    System.out.println(l.applySubtituion("f(a)/X"));
 //	    System.out.println(l.applySubtituion("b/Y"));
 		
-		ArrayList<String> vars2 = new ArrayList<String>();
-		vars2.add("a");
+		ArrayList<Literal> vars2 = new ArrayList<Literal>();
+		vars2.add(consA);
 		Literal l2 = new Literal("f",vars2);
+		System.out.println(l2.toString());
 		
-//		ArrayList<String> vars3 = new ArrayList<String>();
-//		vars3.add(l2.toString());
-//		Literal l3 = new Literal("h",vars3);
+		ArrayList<Literal> vars3 = new ArrayList<Literal>();
+		vars3.add(l2);
+		Literal l3 = new Literal("h",vars3);
+		System.out.println(l3.toString());
 		
-		
-		ArrayList<String> vars4 = new ArrayList<String>();
-		vars4.add(l.toString());
-		vars4.add(l2.toString());
+		ArrayList<Literal> vars4 = new ArrayList<Literal>();
+		vars4.add(l);
+		vars4.add(l2);
 		Literal l4 = new Literal("p",vars4);
-		
-//		
+		System.out.println(l4.toString());
+
 //		System.out.println(l3.toString());
 //		System.out.println(l3.convertToListNotation());
 //		
 ////		System.out.println(l2.toString());
-		System.out.println(l4.toString());
-	    System.out.println(l4.applySubtituion("h2(l)/X"));
+//		System.out.println(l4.toString());
+//	    System.out.println(l4.applySubtituion("h2(l)/X"));
 
-//		l4.convertToListNotation();
+//		System.out.println(l4.convertToListNotation());
+//		String [] arguments = l4.convertToListNotation().split(" ");
+//		
+//		for(String str: arguments)
+//			System.out.println(str);
 
 		
 		
