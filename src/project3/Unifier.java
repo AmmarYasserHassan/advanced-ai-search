@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Unifier {
 	
+	
+	
 	public static void main(String [] args){
 		
 		Literal varX = new Literal("X",false,true,false);
@@ -21,7 +23,8 @@ public class Unifier {
 		Literal l = new Literal("g",vars);
 		
 		ArrayList<Literal> vars2 = new ArrayList<Literal>();
-		vars2.add(consA);
+		//vars2.add(consA);
+		vars2.add(varX);
 		Literal l2 = new Literal("f",vars2);
 		
 		ArrayList<Literal> vars5 = new ArrayList<Literal>();
@@ -31,20 +34,25 @@ public class Unifier {
 		ArrayList<Literal> vars6 = new ArrayList<Literal>();
 		vars6.add(consA);
 		vars6.add(consB);
+		//TODO
+		vars6.add(varY);
 		Literal f2 = new Literal("f1",vars6);
 		
 		ArrayList<Literal> vars3 = new ArrayList<Literal>();
+//		vars3.add(varY);
 		vars3.add(l2);
-		Literal l3 = new Literal("h",vars3);
+		Literal l3 = new Literal("g",vars3);
 		
 		ArrayList<Literal> vars7 = new ArrayList<Literal>();
 		vars7.add(varZ);
 		vars7.add(varY);
+		vars7.add(varX);
 		Literal h_x = new Literal("p",vars7);
 		
 		ArrayList<Literal> vars4 = new ArrayList<Literal>();
 		vars4.add(l);
 		vars4.add(l3);
+		vars4.add(f2);
 		Literal l4 = new Literal("p",vars4);
 		
 //		System.out.println(l);
@@ -60,8 +68,92 @@ public class Unifier {
 		getSigma(subs);
 		System.out.println(subs);
 		
-
+//		System.out.println(l3);
+//		System.out.println(l);
+//		System.out.println(unify(l3, l, subs));
+//		System.out.println(subs);
+//		getSigma(subs);
+//		System.out.println(subs);
 		
+
+//		
+	}
+	
+	public static boolean add(ArrayList<String> subs,String var, String sub)
+	{
+		String oldSub = getSubstitution(subs, var);
+		
+		if(!oldSub.equals("_"))
+		{
+		
+		if(isConstant(oldSub))
+		{
+			if(isConstant(sub))
+			{
+				if(!oldSub.equals(sub))
+					return false;
+				else
+					return true;
+			}
+			
+			if(isPredicate(sub))
+				return false;
+			
+			if(isVariable(sub))
+			{
+				System.out.println("h1");
+				subs.add(sub+"/"+oldSub);
+				return true;
+			}
+			
+		}
+		
+		if(isPredicate(oldSub))
+		{
+
+			if(isConstant(sub))
+				return false;
+			
+			//TODO
+			if(isPredicate(sub))
+			{
+				System.out.println("heereeeeeeee");
+				System.out.println(sub);
+				System.out.println(oldSub);
+			}
+			
+			if(isVariable(sub))
+			{
+				System.out.println("h2");
+				subs.add(sub+"/"+oldSub);
+				return true;
+			}
+		}
+		
+		if(isVariable(oldSub))
+		{   
+			if(!isVariable(sub))
+			{
+			System.out.println("h3");
+			subs.remove(oldSub+"/"+var);
+			subs.add(sub+"/"+var);
+			subs.add(sub+"/"+oldSub);
+			return true;
+			}
+			else
+			{		
+				System.out.println("h4");
+				subs.add(sub+"/"+var);
+				subs.add(sub+"/"+oldSub);
+				return true;
+			}
+		}
+		}
+		
+		System.out.println("h5");
+		
+		subs.add(sub+"/"+var);
+		return true;
 	}
 	
 	public static void getSigma(ArrayList<String> subs)
@@ -75,13 +167,25 @@ public class Unifier {
 			varsWithSubs.add(var);
 		}
 		
-		
 		//TODO if Consistent
 		for(String var: varsWithSubs)
 		{
 			propagate(subs, var,getSubstitution(subs, var) );
 		}
 		
+		
+	}
+	
+	public static boolean checkIfBindingsOfAVariableAreConsistent(ArrayList<String> subs,String var,String sub)
+	{
+		ArrayList<String> subsOfVar = getSubstitutions(subs,var);
+		
+		if(subsOfVar.size()>1)
+		{
+			
+		}
+		
+		return true;
 		
 	}
 	
@@ -105,43 +209,26 @@ public class Unifier {
 			return e1.toString().equals(e2.toString());
 		
 		if(isConstant(e1.toString()) && isVariable(e2.toString()))
-		{
-			subs.add(e1.toString() +"/" + e2.toString());
-			return true;
-		}
+			return add(subs,e2.toString(),e1.toString());
 		
 		if(isVariable(e1.toString()) && isConstant(e2.toString()))
-		{
-			subs.add(e2.toString() +"/" + e1.toString());
-
-			return true;
-		}
+			return add(subs,e1.toString(),e2.toString());
 		
 		if(isVariable(e1.toString()) && isVariable(e2.toString()))
-		{
-			subs.add(e1.toString() +"/" + e2.toString());
-
-			return true;
-		}
+			return add(subs,e1.toString(),e2.toString());
 		
 		
 		if(isPredicate(e1.toString()) && isVariable(e2.toString()))
 		{    
 			if(!e1.occurs(e2.name))
-			{ 
-				subs.add(e1.toString() +"/" + e2.toString());
-				return true;
-			}
+				return add(subs,e2.toString(),e1.toString());
 			
 		}
 
 		if(isPredicate(e2.toString()) && isVariable(e1.toString()))
 		{  
 			if(!e2.occurs(e1.name))
-			{
-				subs.add(e2.toString() +"/" + e1.toString());
-				return true;
-			}
+				return add(subs,e1.toString(),e2.toString());
 		
 		}
 		
@@ -176,6 +263,20 @@ public class Unifier {
 		}
 		
 		return "_";
+	}
+	
+	public static ArrayList<String> getSubstitutions(ArrayList<String> subs, String var)
+	{
+		ArrayList<String> result = new ArrayList<String>();
+		for(String sub: subs)
+		{
+			String[] arr = sub.split("/");
+			String str = arr[1];
+			if(str.equals(var))
+				result.add(arr[0]);
+		}
+		
+		return result;
 	}
 
 	public static String getNameOfPredicate(String folTerm)
