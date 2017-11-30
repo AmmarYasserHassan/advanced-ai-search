@@ -172,5 +172,18 @@ public class Literal {
 		
 		
 	}
+	public static void propagate(ArrayList<String> subs,String var,String sub)
+	{
+		for(int i=0; i<subs.size();i++)
+		{  
+		 if(subs.get(i).split("/")[0].equals(var))
+		 {
+		 String str = subs.get(i).replace(var,sub);
+		 subs.remove(i);
+		 subs.add(i,str);
+		 }			
+		}
+	}
+	
 	
 }
