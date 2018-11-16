@@ -1,42 +1,47 @@
 package project1;
 
 public class Node {
-	
-	//These operators together form the state
-	Grid grid;
-	int numberOfPadsRemaningWithoutRocks;
-	boolean atTeleportalCell;
 
-	
+	// The state
+	Grid grid;
+
+	// g(n)
 	int costToReachThisNode;
+	int depth;
+
 	Node Parent;
 	String actionTakenFromParentToReachThisNode;
+
+	// h(n)
 	int estimatedCostFromThisNodeToTheGoal;
 
-	
-	
-	public Node(Grid grid, int numberOfPadsRemaningWithoutRocks,int costToReachThisNode,
-			Node parent, String actionTakenFromParentToReachThisNode) {
+
+	public Node(Grid grid, int costToReachThisNode, Node parent, String actionTakenFromParentToReachThisNode,
+			int depth) {
 		this.grid = grid;
-		this.numberOfPadsRemaningWithoutRocks = numberOfPadsRemaningWithoutRocks;
-		this.atTeleportalCell = false;;
 		this.costToReachThisNode = costToReachThisNode;
 		Parent = parent;
 		this.actionTakenFromParentToReachThisNode = actionTakenFromParentToReachThisNode;
+		this.depth = depth;
 	}
 
-	public void setEstimatedCostFromANodeToTheGoal(int heuristicValue)
-	{
+
+	public Node(Node Parent) {
+		this.Parent = Parent;
+	}
+
+	public void setEstimatedCostFromANodeToTheGoal(int heuristicValue) {
 		this.estimatedCostFromThisNodeToTheGoal = heuristicValue;
 	}
-	
-   
 
+	public int getEstimatedCostFromANodeToTheGoal() {
+		return this.estimatedCostFromThisNodeToTheGoal;
+	}
 
-
-	public Node(Node Parent)
-	{
-		this.Parent = Parent;
+	@Override
+	public String toString() {
+		return "Node [grid=" + grid + ", Parent=" + Parent + ", actionTakenFromParentToReachThisNode="
+				+ actionTakenFromParentToReachThisNode + "]";
 	}
 
 }

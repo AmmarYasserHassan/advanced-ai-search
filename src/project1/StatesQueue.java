@@ -24,16 +24,13 @@ public class StatesQueue
 	
 	public void enque(Node n, String order)
 	{
-		
+
 		switch(order)
 		{
 		case "Initial State": this.states.add(n); break;
-		case "BF" : this.states.add(n); break;
-		case "DF" : this.states.add(0,n); break;
-		case "ID" : this.states.add(0,n); break;
-		case "GR":
-		case "AS" :
-		case "UC" : this.states.add(n);
+		case "BFS" : this.states.add(n); break;
+		case "DFS" : this.states.add(0,n); break;
+		case "UCS" : this.states.add(n);
 		
 		Collections.sort(this.states, new Comparator<Node>() {
 	        public int compare(Node n1, Node n2)
@@ -49,9 +46,49 @@ public class StatesQueue
 	        }
 	    });
 		break;
+		case "GRS":
+			this.states.add(n);
+			Collections.sort(this.states, new Comparator<Node>() {
+		        public int compare(Node n1, Node n2)
+		        {
+
+		            if(n1.estimatedCostFromThisNodeToTheGoal==n2.estimatedCostFromThisNodeToTheGoal)
+		            	return 0;
+		             
+		            if(n1.estimatedCostFromThisNodeToTheGoal<n2.estimatedCostFromThisNodeToTheGoal)
+		            	return -1;
+		            
+		            return 1;
+		        }
+		    });
+			break;
+		case "ASS" :
+			this.states.add(n);
+			Collections.sort(this.states, new Comparator<Node>() {
+		        public int compare(Node n1, Node n2)
+		        {
+
+		            if(n1.estimatedCostFromThisNodeToTheGoal+n1.costToReachThisNode==n2.estimatedCostFromThisNodeToTheGoal+n2.costToReachThisNode)
+		            	return 0;
+		             
+		            if(n1.estimatedCostFromThisNodeToTheGoal+n1.costToReachThisNode<n2.estimatedCostFromThisNodeToTheGoal+n2.costToReachThisNode)
+		            	return -1;
+		            
+		            return 1;
+		        }
+		    });
+			break;
 		}
 		
 			
+	}
+	
+	
+	public void limitedDepth(int maxDepth, Node n)
+	{
+		if(n.depth<maxDepth){
+			this.states.add(0,n);
+		}
 	}
 	
 	public Node deque()
@@ -70,16 +107,6 @@ public class StatesQueue
 		return this.states.size();
 	}
 	
-	public void show()
-	{
-
-		for(int i=0; i< this.states.size();i++)
-		{
-			System.out.println(this.states.get(i).costToReachThisNode);
-		}
-
-	}
-
 
 	@Override
 	public String toString() {
@@ -87,5 +114,4 @@ public class StatesQueue
 	}
 	
 
-	
 }
